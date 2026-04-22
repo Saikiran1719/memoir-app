@@ -358,11 +358,19 @@ nav { flex: 1; padding: 8px 12px 0; }
       <div class="toolbar">
         <div class="search-wrap"><input class="search-box" id="movie-search" placeholder="Search by title or genre…" oninput="renderMovies()"/></div>
         <select class="filter-select" id="movie-genre-filter" onchange="renderMovies()">
-          <option value="">All Genres</option>
-          <option>Action</option><option>Adventure</option><option>Musical</option><option>War</option><option>Comedy</option><option>Drama</option>
-          <option>Horror</option><option>Sci-Fi</option><option>Romance</option><option>Thriller</option><option>Animation</option>
-          <option>Documentary</option><option>Fantasy</option><option>Mystery</option><option>Other</option>
-        </select>
+        <option value="">All Genres</option>
+        <option>Action</option><option>Adventure</option><option>Comedy</option><option>Drama</option>
+        <option>Horror</option><option>Sci-Fi</option><option>Romance</option><option>Thriller</option>
+        <option>Animation</option><option>Musical</option><option>War</option><option>Documentary</option>
+        <option>Fantasy</option><option>Mystery</option><option>Crime</option><option>Biography</option>
+        <option>History</option><option>Sport</option><option>Western</option><option>Superhero</option>
+        <option>Anime</option>
+        <optgroup label="── Combinations ──" disabled></optgroup>
+        <option>Thriller & Crime</option><option>War & Drama</option><option>Action & Adventure</option>
+        <option>Sci-Fi & Thriller</option><option>Romance & Drama</option><option>Comedy & Drama</option>
+        <option>Crime & Drama</option><option>Horror & Thriller</option><option>Fantasy & Adventure</option>
+        <option>Action & Comedy</option><option>Mystery & Thriller</option><option>Other</option>
+      </select>
         <select class="filter-select" id="movie-rating-filter" onchange="renderMovies()">
           <option value="">All Ratings</option><option value="5">★★★★★</option><option value="4">★★★★+</option><option value="3">★★★+</option>
         </select>
@@ -624,7 +632,7 @@ function movieForm(d){return`<div class="form-row">
   <div class="form-field"><label>Year</label><input id="f-year" type="number" value="${d?.year||''}" placeholder="2024" min="1900" max="2099"/></div>
 </div><div class="form-row">
   <div class="form-field"><label>Genre</label><select id="f-genre"><option value="">Select genre</option>
-    ${['Action','Comedy','Drama','Horror','Sci-Fi','Romance','Thriller','Animation','Documentary','Fantasy','Mystery','Other'].map(g=>`<option ${d?.genre===g?'selected':''}>${g}</option>`).join('')}
+    ${['Action','Adventure','Comedy','Drama','Horror','Sci-Fi','Romance','Thriller','Animation','Musical','War','Documentary','Fantasy','Mystery','Crime','Biography','History','Sport','Western','Superhero','Anime','Thriller & Crime','War & Drama','Action & Adventure','Sci-Fi & Thriller','Romance & Drama','Comedy & Drama','Crime & Drama','Horror & Thriller','Fantasy & Adventure','Action & Comedy','Mystery & Thriller','Other'].map(g=>`<option ${d?.genre===g?'selected':''}>${g}</option>`).join('')}
   </select></div>
   <div class="form-field"><label>Watched Date</label><input id="f-watched" type="date" value="${d?.watchedDate||''}"/></div>
 </div>
