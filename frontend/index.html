@@ -18,6 +18,8 @@
   --rust2: #c44a18;
   --moss: #3d5c35;
   --moss2: #4e7444;
+  --violet: #5b4fcf;
+  --violet2: #7c6fdb;
   --muted: #7a6e5f;
   --muted2: #9d9082;
   --line: rgba(184,146,74,0.2);
@@ -93,8 +95,6 @@ nav { flex: 1; padding: 8px 12px 0; }
 .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.06); }
 .btn-logout { width: 100%; padding: 9px 14px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 8px; }
 .btn-logout:hover { background: rgba(168,57,15,0.15); color: #e8907a; border-color: rgba(168,57,15,0.3); }
-
-/* ── HAMBURGER: fixed position, always on top ── */
 .hamburger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; background: var(--ink); border: 1px solid rgba(255,255,255,0.08); width: 42px; height: 42px; border-radius: var(--radius); flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; box-shadow: var(--shadow-md); flex-shrink: 0; }
 .hamburger span { display: block; width: 18px; height: 1.5px; background: rgba(255,255,255,0.7); border-radius: 2px; }
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 40; backdrop-filter: blur(2px); }
@@ -115,21 +115,23 @@ nav { flex: 1; padding: 8px 12px 0; }
 /* DASHBOARD */
 .welcome-bar { margin-bottom: 32px; }
 .welcome-bar h2 { font-family: 'Cormorant Garamond',serif; font-size: 2.4rem; font-weight: 600; letter-spacing: -0.02em; }
-.welcome-bar h2 span { color: var(--sepia); }
 .welcome-bar p { font-size: 0.83rem; color: var(--muted2); margin-top: 4px; }
-.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 40px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 40px; }
 .stat-card { background: var(--paper); border-radius: var(--radius); padding: 24px 22px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
 .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
-.stat-card.movies::after { background: linear-gradient(90deg,var(--rust),var(--rust2)); }
-.stat-card.books::after  { background: linear-gradient(90deg,var(--moss),var(--moss2)); }
-.stat-card.diary::after  { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
+.stat-card.movies::after  { background: linear-gradient(90deg,var(--rust),var(--rust2)); }
+.stat-card.series::after  { background: linear-gradient(90deg,var(--violet),var(--violet2)); }
+.stat-card.books::after   { background: linear-gradient(90deg,var(--moss),var(--moss2)); }
+.stat-card.diary::after   { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
 .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
 .stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 16px; }
 .stat-card.movies .stat-icon { background: rgba(168,57,15,0.08); }
+.stat-card.series .stat-icon { background: rgba(91,79,207,0.08); }
 .stat-card.books  .stat-icon { background: rgba(61,92,53,0.08); }
 .stat-card.diary  .stat-icon { background: rgba(184,146,74,0.1); }
 .stat-num { font-family: 'Cormorant Garamond',serif; font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 3px; }
 .stat-card.movies .stat-num { color: var(--rust); }
+.stat-card.series .stat-num { color: var(--violet); }
 .stat-card.books  .stat-num { color: var(--moss); }
 .stat-card.diary  .stat-num { color: var(--sepia); }
 .stat-label { font-size: 0.72rem; color: var(--muted2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
@@ -142,9 +144,10 @@ nav { flex: 1; padding: 8px 12px 0; }
 .entry-card { background: var(--paper); border-radius: var(--radius); padding: 0; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.9); transition: all 0.25s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; display: flex; flex-direction: column; }
 .entry-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
 .card-accent { height: 4px; }
-.entry-card.movie .card-accent { background: linear-gradient(90deg,var(--rust),#e05a2a); }
-.entry-card.book  .card-accent { background: linear-gradient(90deg,var(--moss),#62904f); }
-.entry-card.diary-entry .card-accent { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
+.entry-card.movie        .card-accent { background: linear-gradient(90deg,var(--rust),#e05a2a); }
+.entry-card.book         .card-accent { background: linear-gradient(90deg,var(--moss),#62904f); }
+.entry-card.series-entry .card-accent { background: linear-gradient(90deg,var(--violet),var(--violet2)); }
+.entry-card.diary-entry  .card-accent { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
 .card-body { padding: 18px 20px 14px; flex: 1; display: flex; flex-direction: column; }
 .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
 .card-title { font-family: 'Cormorant Garamond',serif; font-size: 1.15rem; font-weight: 700; line-height: 1.3; flex: 1; }
@@ -155,12 +158,15 @@ nav { flex: 1; padding: 8px 12px 0; }
 .btn-icon.edit:hover { background: var(--sepia); border-color: var(--sepia); color: white; }
 .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
 .tag { padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
-.tag.genre   { background: rgba(168,57,15,0.08); color: var(--rust); border: 1px solid rgba(168,57,15,0.15); }
-.tag.year    { background: rgba(122,110,95,0.08); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
-.tag.status-reading      { background: rgba(184,146,74,0.12); color: #7a5e2a; border: 1px solid rgba(184,146,74,0.2); }
-.tag.status-completed    { background: rgba(61,92,53,0.1); color: var(--moss); border: 1px solid rgba(61,92,53,0.18); }
-.tag.status-paused       { background: rgba(122,110,95,0.1); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
-.tag.status-want-to-read { background: rgba(22,18,14,0.06); color: var(--ink2); border: 1px solid rgba(22,18,14,0.1); }
+.tag.genre    { background: rgba(168,57,15,0.08); color: var(--rust); border: 1px solid rgba(168,57,15,0.15); }
+.tag.year     { background: rgba(122,110,95,0.08); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
+.tag.platform { background: rgba(91,79,207,0.08); color: var(--violet); border: 1px solid rgba(91,79,207,0.15); }
+.tag.status-reading        { background: rgba(184,146,74,0.12); color: #7a5e2a; border: 1px solid rgba(184,146,74,0.2); }
+.tag.status-watching       { background: rgba(91,79,207,0.1); color: var(--violet); border: 1px solid rgba(91,79,207,0.18); }
+.tag.status-completed      { background: rgba(61,92,53,0.1); color: var(--moss); border: 1px solid rgba(61,92,53,0.18); }
+.tag.status-paused         { background: rgba(122,110,95,0.1); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
+.tag.status-want-to-read   { background: rgba(22,18,14,0.06); color: var(--ink2); border: 1px solid rgba(22,18,14,0.1); }
+.tag.status-want-to-watch  { background: rgba(22,18,14,0.06); color: var(--ink2); border: 1px solid rgba(22,18,14,0.1); }
 .stars { display: flex; gap: 2px; margin-bottom: 8px; }
 .star { font-size: 0.78rem; }
 .star.filled { color: var(--sepia2); }
@@ -233,15 +239,14 @@ nav { flex: 1; padding: 8px 12px 0; }
 .toast.error   { border-left-color: var(--rust); }
 @keyframes toastIn { from{opacity:0;transform:translateX(24px) scale(0.95)} to{opacity:1;transform:translateX(0) scale(1)} }
 
-/* ── RESPONSIVE ── */
+/* RESPONSIVE */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
   .overlay{display:block;opacity:0;pointer-events:none;transition:opacity 0.3s}.overlay.open{opacity:1;pointer-events:all}
   .hamburger{display:flex}
-  /* FIX 1: push sidebar logo right so it clears the hamburger button */
-  .sidebar-logo { padding-left: 64px; }
+  .sidebar-logo{padding-left:64px}
   .main{margin-left:0;padding:72px 20px 28px}
-  .stats-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px}
   .form-row{grid-template-columns:1fr}.cards-grid{grid-template-columns:1fr}
   .modal-body,.modal-footer,.modal-header{padding-left:22px;padding-right:22px}
 }
@@ -265,6 +270,7 @@ nav { flex: 1; padding: 8px 12px 0; }
       <div class="auth-quote">A life worth living is worth recording.</div>
       <div class="auth-features">
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Track every movie you've watched</span></div>
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Log your web series & shows</span></div>
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Log your reading journey</span></div>
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Keep a private diary</span></div>
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Synced to MongoDB Atlas</span></div>
@@ -300,29 +306,29 @@ nav { flex: 1; padding: 8px 12px 0; }
 <div id="app">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo"><h1>Mem<em>oir</em></h1><p>Personal Vault</p></div>
-    <div style="padding:0 0 0 0">
-      <div class="sidebar-user">
-        <div class="user-avatar" id="user-avatar">S</div>
-        <div class="user-info">
-          <div class="user-name" id="user-name">User</div>
-          <div class="user-email" id="user-email">user@email.com</div>
-        </div>
+    <div><div class="sidebar-user">
+      <div class="user-avatar" id="user-avatar">S</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name">User</div>
+        <div class="user-email" id="user-email">user@email.com</div>
       </div>
-    </div>
+    </div></div>
     <nav>
       <div class="nav-section">Main</div>
       <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard',this)"><div class="nav-icon">◈</div>Dashboard</div>
       <div class="nav-section">Collections</div>
-      <div class="nav-item" data-page="movies" onclick="showPage('movies',this)"><div class="nav-icon">🎬</div>Movies<span class="nav-count" id="nc-movies">0</span></div>
-      <div class="nav-item" data-page="books"  onclick="showPage('books',this)"> <div class="nav-icon">📚</div>Books <span class="nav-count" id="nc-books">0</span></div>
+      <div class="nav-item" data-page="movies"    onclick="showPage('movies',this)">   <div class="nav-icon">🎬</div>Movies    <span class="nav-count" id="nc-movies">0</span></div>
+      <div class="nav-item" data-page="webseries" onclick="showPage('webseries',this)"><div class="nav-icon">📺</div>Web Series<span class="nav-count" id="nc-webseries">0</span></div>
+      <div class="nav-item" data-page="books"     onclick="showPage('books',this)">    <div class="nav-icon">📚</div>Books     <span class="nav-count" id="nc-books">0</span></div>
       <div class="nav-section">Personal</div>
-      <div class="nav-item" data-page="diary"  onclick="showPage('diary',this)"> <div class="nav-icon">✍️</div>Diary <span class="nav-count" id="nc-diary">0</span></div>
+      <div class="nav-item" data-page="diary"     onclick="showPage('diary',this)">    <div class="nav-icon">✍️</div>Diary     <span class="nav-count" id="nc-diary">0</span></div>
     </nav>
     <div class="sidebar-footer"><button class="btn-logout" onclick="handleLogout()">⟵ &nbsp;Sign Out</button></div>
   </aside>
   <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
 
   <main class="main">
+
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="welcome-bar">
@@ -333,6 +339,10 @@ nav { flex: 1; padding: 8px 12px 0; }
         <div class="stat-card movies" onclick="showPage('movies',document.querySelector('[data-page=movies]'))">
           <div class="stat-icon">🎬</div><div class="stat-num" id="stat-movies">0</div>
           <div class="stat-label">Movies Watched</div><div class="stat-sub" id="stat-movies-sub">Start tracking</div>
+        </div>
+        <div class="stat-card series" onclick="showPage('webseries',document.querySelector('[data-page=webseries]'))">
+          <div class="stat-icon">📺</div><div class="stat-num" id="stat-series">0</div>
+          <div class="stat-label">Series Watched</div><div class="stat-sub" id="stat-series-sub">Start tracking</div>
         </div>
         <div class="stat-card books" onclick="showPage('books',document.querySelector('[data-page=books]'))">
           <div class="stat-icon">📚</div><div class="stat-num" id="stat-books">0</div>
@@ -345,7 +355,7 @@ nav { flex: 1; padding: 8px 12px 0; }
       </div>
       <div class="section-header"><div class="section-title">Recent Activity</div></div>
       <div class="cards-grid" id="recent-grid">
-        <div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, book, or diary entry.</p></div>
+        <div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, series, book, or diary entry.</p></div>
       </div>
     </div>
 
@@ -358,24 +368,47 @@ nav { flex: 1; padding: 8px 12px 0; }
       <div class="toolbar">
         <div class="search-wrap"><input class="search-box" id="movie-search" placeholder="Search by title or genre…" oninput="renderMovies()"/></div>
         <select class="filter-select" id="movie-genre-filter" onchange="renderMovies()">
-        <option value="">All Genres</option>
-        <option>Action</option><option>Adventure</option><option>Comedy</option><option>Drama</option>
-        <option>Horror</option><option>Sci-Fi</option><option>Romance</option><option>Thriller</option>
-        <option>Animation</option><option>Musical</option><option>War</option><option>Documentary</option>
-        <option>Fantasy</option><option>Mystery</option><option>Crime</option><option>Biography</option>
-        <option>History</option><option>Sport</option><option>Western</option><option>Superhero</option>
-        <option>Anime</option>
-        <optgroup label="── Combinations ──" disabled></optgroup>
-        <option>Thriller & Crime</option><option>War & Drama</option><option>Action & Adventure</option>
-        <option>Sci-Fi & Thriller</option><option>Romance & Drama</option><option>Comedy & Drama</option>
-        <option>Crime & Drama</option><option>Horror & Thriller</option><option>Fantasy & Adventure</option>
-        <option>Action & Comedy</option><option>Mystery & Thriller</option><option>Other</option>
-      </select>
+          <option value="">All Genres</option>
+          <option>Action</option><option>Adventure</option><option>Comedy</option><option>Drama</option>
+          <option>Horror</option><option>Sci-Fi</option><option>Romance</option><option>Thriller</option>
+          <option>Animation</option><option>Musical</option><option>War</option><option>Documentary</option>
+          <option>Fantasy</option><option>Mystery</option><option>Crime</option><option>Biography</option>
+          <option>History</option><option>Sport</option><option>Western</option><option>Superhero</option>
+          <option>Anime</option>
+          <optgroup label="── Combinations ──" disabled></optgroup>
+          <option>Thriller & Crime</option><option>War & Drama</option><option>Action & Adventure</option>
+          <option>Sci-Fi & Thriller</option><option>Romance & Drama</option><option>Comedy & Drama</option>
+          <option>Crime & Drama</option><option>Horror & Thriller</option><option>Fantasy & Adventure</option>
+          <option>Action & Comedy</option><option>Mystery & Thriller</option><option>Other</option>
+        </select>
         <select class="filter-select" id="movie-rating-filter" onchange="renderMovies()">
           <option value="">All Ratings</option><option value="5">★★★★★</option><option value="4">★★★★+</option><option value="3">★★★+</option>
         </select>
       </div>
       <div class="cards-grid" id="movies-grid"></div>
+    </div>
+
+    <!-- WEB SERIES -->
+    <div class="page" id="page-webseries">
+      <div class="page-header">
+        <div><h2>Web Series</h2><p>Shows & series you've watched</p></div>
+        <button class="btn-add" onclick="openModal('webseries')">＋ Add Series</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><input class="search-box" id="series-search" placeholder="Search by title…" oninput="renderSeries()"/></div>
+        <select class="filter-select" id="series-platform-filter" onchange="renderSeries()">
+          <option value="">All Platforms</option>
+          <option>Netflix</option><option>Amazon Prime</option><option>Disney+</option>
+          <option>Apple TV+</option><option>HBO Max</option><option>Hulu</option>
+          <option>Hotstar</option><option>SonyLIV</option><option>ZEE5</option>
+          <option>JioCinema</option><option>Aha</option><option>Other</option>
+        </select>
+        <select class="filter-select" id="series-status-filter" onchange="renderSeries()">
+          <option value="">All Status</option>
+          <option>Watching</option><option>Completed</option><option>Paused</option><option>Want to Watch</option>
+        </select>
+      </div>
+      <div class="cards-grid" id="series-grid"></div>
     </div>
 
     <!-- BOOKS -->
@@ -404,6 +437,7 @@ nav { flex: 1; padding: 8px 12px 0; }
       </div>
       <div class="diary-list" id="diary-list"></div>
     </div>
+
   </main>
 </div>
 
@@ -426,11 +460,13 @@ nav { flex: 1; padding: 8px 12px 0; }
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-const API = 'https://memoir-app-9uhs.onrender.com/api';
+const API = 'http://localhost:5000/api';
 let token=localStorage.getItem('memoir_token')||null;
 let currentUser=JSON.parse(localStorage.getItem('memoir_user')||'null');
 let currentModal=null,editingId=null,currentRating=0;
-let allMovies=[],allBooks=[],allDiary=[];
+let allMovies=[],allBooks=[],allDiary=[],allSeries=[];
+
+const GENRES=['Action','Adventure','Comedy','Drama','Horror','Sci-Fi','Romance','Thriller','Animation','Musical','War','Documentary','Fantasy','Mystery','Crime','Biography','History','Sport','Western','Superhero','Anime','Thriller & Crime','War & Drama','Action & Adventure','Sci-Fi & Thriller','Romance & Drama','Comedy & Drama','Crime & Drama','Horror & Thriller','Fantasy & Adventure','Action & Comedy','Mystery & Thriller','Other'];
 
 async function api(method,path,body=null){
   const opts={method,headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})}};
@@ -441,6 +477,7 @@ async function api(method,path,body=null){
   return data;
 }
 
+// ── AUTH ──
 function switchTab(tab){
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='signup')));
   document.getElementById('login-form').style.display=tab==='login'?'block':'none';
@@ -474,14 +511,13 @@ function loginUser(tok,user){
   setWelcome();
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('app').classList.add('visible');
-  // Set initial history state so back button works from the start
   history.replaceState({page:'dashboard'},'','#dashboard');
   loadAll();
 }
 function handleLogout(){
   token=null;currentUser=null;
   localStorage.removeItem('memoir_token');localStorage.removeItem('memoir_user');
-  allMovies=[];allBooks=[];allDiary=[];
+  allMovies=[];allBooks=[];allDiary=[];allSeries=[];
   document.getElementById('app').classList.remove('visible');
   document.getElementById('auth-screen').classList.remove('hidden');
   document.getElementById('login-email').value='';document.getElementById('login-password').value='';
@@ -493,66 +529,77 @@ function setWelcome(){
   document.getElementById('welcome-msg').innerHTML=`${greet}, <span style="color:var(--sepia)">${currentUser.name.split(' ')[0]}</span>`;
 }
 
+// ── LOAD ──
 async function loadAll(){
   try{
-    [allMovies,allBooks,allDiary]=await Promise.all([api('GET','/movies'),api('GET','/books'),api('GET','/diary')]);
-    updateDashboard();renderMovies();renderBooks();renderDiary();updateCounts();
+    [allMovies,allBooks,allDiary,allSeries]=await Promise.all([
+      api('GET','/movies'),api('GET','/books'),api('GET','/diary'),api('GET','/webseries')
+    ]);
+    updateDashboard();renderMovies();renderSeries();renderBooks();renderDiary();updateCounts();
   }catch(err){showToast('Failed to load data.','error');}
 }
 function updateCounts(){
   document.getElementById('nc-movies').textContent=allMovies.length;
+  document.getElementById('nc-webseries').textContent=allSeries.length;
   document.getElementById('nc-books').textContent=allBooks.length;
   document.getElementById('nc-diary').textContent=allDiary.length;
 }
 
-// ── FIX 2: showPage now pushes browser history so back button navigates within the app ──
-function showPage(name, el){
-  _renderPage(name, el);
-  // Only push state if we're actually changing page
-  const current = history.state?.page;
-  if(current !== name){
-    history.pushState({page: name}, '', '#' + name);
-  }
+// ── NAV ──
+function showPage(name,el){
+  _renderPage(name,el);
+  if(history.state?.page!==name) history.pushState({page:name},'','#'+name);
 }
-
-function _renderPage(name, el){
+function _renderPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(`page-${name}`).classList.add('active');
-  // Find and activate the correct nav item if el not passed
-  const navEl = el || document.querySelector(`[data-page="${name}"]`);
-  if(navEl) navEl.classList.add('active');
+  const navEl=el||document.querySelector(`[data-page="${name}"]`);
+  if(navEl)navEl.classList.add('active');
   closeSidebar();
 }
-
-// Handle browser back / forward button
-window.addEventListener('popstate', (e) => {
-  if(!token) return; // not logged in, let the browser do its thing
-  const page = e.state?.page || 'dashboard';
-  _renderPage(page);
+window.addEventListener('popstate',(e)=>{
+  if(!token)return;
+  _renderPage(e.state?.page||'dashboard');
 });
-
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
 
+// ── DASHBOARD ──
 function updateDashboard(){
   document.getElementById('stat-movies').textContent=allMovies.length;
+  document.getElementById('stat-series').textContent=allSeries.length;
   document.getElementById('stat-books').textContent=allBooks.length;
   document.getElementById('stat-diary').textContent=allDiary.length;
+  // Movies sub
   const rated=allMovies.filter(m=>m.rating>0);
   const avg=rated.length?(rated.reduce((s,m)=>s+m.rating,0)/rated.length).toFixed(1):null;
   document.getElementById('stat-movies-sub').textContent=avg?`Avg rating: ${avg} ★`:(allMovies.length?'No ratings yet':'Start tracking');
+  // Series sub
+  const watching=allSeries.filter(s=>s.status==='Watching').length;
+  document.getElementById('stat-series-sub').textContent=allSeries.length?`${watching} still watching`:'Start tracking';
+  // Books sub
   const done=allBooks.filter(b=>b.status==='Completed').length;
   document.getElementById('stat-books-sub').textContent=allBooks.length?`${done} completed`:'Start tracking';
+  // Diary sub
   const last=allDiary[0];
   document.getElementById('stat-diary-sub').textContent=last?`Last: ${fmtDate(last.createdAt)}`:'Start writing';
-  const recent=[...allMovies.map(m=>({...m,_type:'movie'})),...allBooks.map(b=>({...b,_type:'book'})),...allDiary.map(d=>({...d,_type:'diary'}))]
-    .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,6);
+  // Recent
+  const recent=[
+    ...allMovies.map(m=>({...m,_type:'movie'})),
+    ...allSeries.map(s=>({...s,_type:'webseries'})),
+    ...allBooks.map(b=>({...b,_type:'book'})),
+    ...allDiary.map(d=>({...d,_type:'diary'}))
+  ].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,6);
   const grid=document.getElementById('recent-grid');
-  grid.innerHTML=recent.length?recent.map(i=>i._type==='movie'?movieCard(i):i._type==='book'?bookCard(i):diaryCardCompact(i)).join('')
-    :`<div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, book, or diary entry.</p></div>`;
+  grid.innerHTML=recent.length?recent.map(i=>
+    i._type==='movie'?movieCard(i):
+    i._type==='webseries'?seriesCard(i):
+    i._type==='book'?bookCard(i):diaryCardCompact(i)
+  ).join(''):`<div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, series, book, or diary entry.</p></div>`;
 }
 
+// ── MOVIES ──
 function renderMovies(){
   const q=(document.getElementById('movie-search')?.value||'').toLowerCase();
   const gf=document.getElementById('movie-genre-filter')?.value||'';
@@ -572,6 +619,32 @@ function movieCard(m){
     <div class="card-footer"><span class="card-date">${m.watchedDate||fmtDate(m.createdAt)}</span></div></div>`;
 }
 
+// ── WEB SERIES ──
+function renderSeries(){
+  const q=(document.getElementById('series-search')?.value||'').toLowerCase();
+  const pf=document.getElementById('series-platform-filter')?.value||'';
+  const sf=document.getElementById('series-status-filter')?.value||'';
+  const items=allSeries.filter(s=>(!q||s.title.toLowerCase().includes(q))&&(!pf||s.platform===pf)&&(!sf||s.status===sf));
+  document.getElementById('series-grid').innerHTML=items.length?items.map(seriesCard).join('')
+    :`<div class="empty-state"><div class="empty-icon">📺</div><div class="empty-title">No series yet</div><p class="empty-sub">Add your first show or series.</p></div>`;
+}
+function seriesCard(s){
+  const sc=(s.status||'').toLowerCase().replace(/\s+/g,'-');
+  const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=(s.rating||0)?'filled':'empty'}">★</span>`).join('');
+  return `<div class="entry-card series-entry"><div class="card-accent"></div><div class="card-body">
+    <div class="card-header"><div class="card-title">${esc(s.title)}</div>
+    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('webseries','${s._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('webseries','${s._id}')">✕</button></div></div>
+    <div class="card-tags">
+      ${s.status?`<span class="tag status-${sc}">${s.status}</span>`:''}
+      ${s.platform?`<span class="tag platform">${esc(s.platform)}</span>`:''}
+      ${s.seasons?`<span class="tag year">${s.seasons} season${s.seasons>1?'s':''}</span>`:''}
+    </div>
+    ${s.rating?`<div class="stars">${stars}</div>`:''}
+    ${s.notes?`<div class="card-note">${esc(s.notes)}</div>`:''}</div>
+    <div class="card-footer"><span class="card-date">${fmtDate(s.createdAt)}</span></div></div>`;
+}
+
+// ── BOOKS ──
 function renderBooks(){
   const q=(document.getElementById('book-search')?.value||'').toLowerCase();
   const sf=document.getElementById('book-status-filter')?.value||'';
@@ -591,6 +664,7 @@ function bookCard(b){
     <div class="card-footer">${b.author?`<span class="card-author">by ${esc(b.author)}</span>`:'<span></span>'}<span class="card-date">${fmtDate(b.createdAt)}</span></div></div>`;
 }
 
+// ── DIARY ──
 function renderDiary(){
   const q=(document.getElementById('diary-search')?.value||'').toLowerCase();
   const items=allDiary.filter(d=>!q||d.content.toLowerCase().includes(q));
@@ -613,52 +687,94 @@ function diaryCardCompact(d){
     <div class="card-footer"><span class="card-date">${fmtDate(d.createdAt)}</span></div></div>`;
 }
 
+// ── MODAL ──
 function openModal(type,data=null){
   currentModal=type;editingId=data?data._id:null;currentRating=data?(data.rating||0):0;
-  const cfg={movie:{title:data?'Edit Movie':'Add Movie',sub:data?'Update the details':'Log a movie you watched'},
-             book: {title:data?'Edit Book':'Add Book',  sub:data?'Update the details':'Log a book you read'},
-             diary:{title:data?'Edit Entry':'New Entry', sub:data?'Update your entry':'Write freely — this is private'}};
+  const cfg={
+    movie:     {title:data?'Edit Movie':'Add Movie',         sub:data?'Update the details':'Log a movie you watched'},
+    webseries: {title:data?'Edit Series':'Add Web Series',   sub:data?'Update the details':'Log a show or series'},
+    book:      {title:data?'Edit Book':'Add Book',           sub:data?'Update the details':'Log a book you read'},
+    diary:     {title:data?'Edit Entry':'New Diary Entry',   sub:data?'Update your entry':'Write freely — this is private'}
+  };
   document.getElementById('modal-title').textContent=cfg[type].title;
   document.getElementById('modal-subtitle').textContent=cfg[type].sub;
-  document.getElementById('modal-body').innerHTML=type==='movie'?movieForm(data):type==='book'?bookForm(data):diaryForm(data);
+  document.getElementById('modal-body').innerHTML=
+    type==='movie'?movieForm(data):
+    type==='webseries'?seriesForm(data):
+    type==='book'?bookForm(data):diaryForm(data);
   if(type!=='diary')renderStars(currentRating);
   document.getElementById('btn-save').textContent='Save Entry';
   document.getElementById('btn-save').disabled=false;
   document.getElementById('modal-overlay').classList.add('open');
   setTimeout(()=>document.querySelector('#modal-body input,#modal-body textarea')?.focus(),100);
 }
-function movieForm(d){return`<div class="form-row">
-  <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Inception"/></div>
-  <div class="form-field"><label>Year</label><input id="f-year" type="number" value="${d?.year||''}" placeholder="2024" min="1900" max="2099"/></div>
-</div><div class="form-row">
-  <div class="form-field"><label>Genre</label><select id="f-genre"><option value="">Select genre</option>
-    ${['Action','Adventure','Comedy','Drama','Horror','Sci-Fi','Romance','Thriller','Animation','Musical','War','Documentary','Fantasy','Mystery','Crime','Biography','History','Sport','Western','Superhero','Anime','Thriller & Crime','War & Drama','Action & Adventure','Sci-Fi & Thriller','Romance & Drama','Comedy & Drama','Crime & Drama','Horror & Thriller','Fantasy & Adventure','Action & Comedy','Mystery & Thriller','Other'].map(g=>`<option ${d?.genre===g?'selected':''}>${g}</option>`).join('')}
-  </select></div>
-  <div class="form-field"><label>Watched Date</label><input id="f-watched" type="date" value="${d?.watchedDate||''}"/></div>
-</div>
-<div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
-<div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="What did you think of this movie?">${esc(d?.notes||'')}</textarea></div>`;}
-function bookForm(d){return`<div class="form-row">
-  <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Atomic Habits"/></div>
-  <div class="form-field"><label>Author</label><input id="f-author" value="${esc(d?.author||'')}" placeholder="e.g. James Clear"/></div>
-</div><div class="form-row">
-  <div class="form-field"><label>Status</label><select id="f-status">${['Reading','Completed','Paused','Want to Read'].map(s=>`<option ${d?.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
-  <div class="form-field"><label>Pages</label><input id="f-pages" type="number" value="${d?.pages||''}" placeholder="e.g. 320"/></div>
-</div>
-<div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
-<div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts, key takeaways…">${esc(d?.notes||'')}</textarea></div>`;}
-function diaryForm(d){return`<div class="form-field"><label>Your Thoughts *</label><textarea id="f-content" style="min-height:200px" placeholder="Write freely… this is just for you.">${esc(d?.content||'')}</textarea></div>`;}
+
+function movieForm(d){
+  return `<div class="form-row">
+    <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Inception"/></div>
+    <div class="form-field"><label>Year</label><input id="f-year" type="number" value="${d?.year||''}" placeholder="2024" min="1900" max="2099"/></div>
+  </div><div class="form-row">
+    <div class="form-field"><label>Genre</label><select id="f-genre"><option value="">Select genre</option>
+      ${GENRES.map(g=>`<option ${d?.genre===g?'selected':''}>${g}</option>`).join('')}
+    </select></div>
+    <div class="form-field"><label>Watched Date</label><input id="f-watched" type="date" value="${d?.watchedDate||''}"/></div>
+  </div>
+  <div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
+  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="What did you think of this movie?">${esc(d?.notes||'')}</textarea></div>`;
+}
+
+function seriesForm(d){
+  const platforms=['Netflix','Amazon Prime','Disney+','Apple TV+','HBO Max','Hulu','Hotstar','SonyLIV','ZEE5','JioCinema','Aha','Other'];
+  return `<div class="form-row">
+    <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Breaking Bad"/></div>
+    <div class="form-field"><label>Seasons</label><input id="f-seasons" type="number" value="${d?.seasons||''}" placeholder="e.g. 5" min="1"/></div>
+  </div><div class="form-row">
+    <div class="form-field"><label>Platform</label><select id="f-platform"><option value="">Select platform</option>
+      ${platforms.map(p=>`<option ${d?.platform===p?'selected':''}>${p}</option>`).join('')}
+    </select></div>
+    <div class="form-field"><label>Status</label><select id="f-status">
+      ${['Watching','Completed','Paused','Want to Watch'].map(s=>`<option ${d?.status===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
+  </div>
+  <div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
+  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts on this series…">${esc(d?.notes||'')}</textarea></div>`;
+}
+
+function bookForm(d){
+  return `<div class="form-row">
+    <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Atomic Habits"/></div>
+    <div class="form-field"><label>Author</label><input id="f-author" value="${esc(d?.author||'')}" placeholder="e.g. James Clear"/></div>
+  </div><div class="form-row">
+    <div class="form-field"><label>Status</label><select id="f-status">
+      ${['Reading','Completed','Paused','Want to Read'].map(s=>`<option ${d?.status===s?'selected':''}>${s}</option>`).join('')}
+    </select></div>
+    <div class="form-field"><label>Pages</label><input id="f-pages" type="number" value="${d?.pages||''}" placeholder="e.g. 320"/></div>
+  </div>
+  <div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
+  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts, key takeaways…">${esc(d?.notes||'')}</textarea></div>`;
+}
+
+function diaryForm(d){
+  return `<div class="form-field"><label>Your Thoughts *</label><textarea id="f-content" style="min-height:200px" placeholder="Write freely… this is just for you.">${esc(d?.content||'')}</textarea></div>`;
+}
+
 function renderStars(sel){const c=document.getElementById('star-rating');if(!c)return;c.innerHTML=[1,2,3,4,5].map(i=>`<button type="button" class="star-btn ${i<=sel?'active':''}" onclick="setRating(${i})">★</button>`).join('');}
 function setRating(n){currentRating=n;renderStars(n);}
 function closeModal(){document.getElementById('modal-overlay').classList.remove('open');editingId=null;currentModal=null;currentRating=0;}
 function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
 
+// ── SAVE ──
 async function saveEntry(){
   const btn=document.getElementById('btn-save');
   btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
-  try{if(currentModal==='movie')await saveMovie();else if(currentModal==='book')await saveBook();else await saveDiary();}
-  catch(err){showToast(err.message,'error');btn.textContent='Save Entry';btn.disabled=false;}
+  try{
+    if(currentModal==='movie')await saveMovie();
+    else if(currentModal==='webseries')await saveSeries();
+    else if(currentModal==='book')await saveBook();
+    else await saveDiary();
+  }catch(err){showToast(err.message,'error');btn.textContent='Save Entry';btn.disabled=false;}
 }
+
 async function saveMovie(){
   const title=document.getElementById('f-title').value.trim();
   if(!title){showToast('Title is required.','error');resetBtn();return;}
@@ -667,6 +783,16 @@ async function saveMovie(){
   else{const c=await api('POST','/movies',body);allMovies.unshift(c);showToast('Movie added! 🎬','success');}
   closeModal();renderMovies();updateDashboard();updateCounts();
 }
+
+async function saveSeries(){
+  const title=document.getElementById('f-title').value.trim();
+  if(!title){showToast('Title is required.','error');resetBtn();return;}
+  const body={title,seasons:document.getElementById('f-seasons').value||'',platform:document.getElementById('f-platform').value||'',status:document.getElementById('f-status').value||'Watching',rating:currentRating,notes:document.getElementById('f-notes').value.trim()};
+  if(editingId){const u=await api('PUT',`/webseries/${editingId}`,body);allSeries=allSeries.map(s=>s._id===editingId?u:s);showToast('Series updated!','success');}
+  else{const c=await api('POST','/webseries',body);allSeries.unshift(c);showToast('Series added! 📺','success');}
+  closeModal();renderSeries();updateDashboard();updateCounts();
+}
+
 async function saveBook(){
   const title=document.getElementById('f-title').value.trim();
   if(!title){showToast('Title is required.','error');resetBtn();return;}
@@ -675,6 +801,7 @@ async function saveBook(){
   else{const c=await api('POST','/books',body);allBooks.unshift(c);showToast('Book added! 📚','success');}
   closeModal();renderBooks();updateDashboard();updateCounts();
 }
+
 async function saveDiary(){
   const content=document.getElementById('f-content').value.trim();
   if(!content){showToast('Write something first.','error');resetBtn();return;}
@@ -682,22 +809,30 @@ async function saveDiary(){
   else{const c=await api('POST','/diary',{content});allDiary.unshift(c);showToast('Entry saved! ✍️','success');}
   closeModal();renderDiary();updateDashboard();updateCounts();
 }
+
 function resetBtn(){const b=document.getElementById('btn-save');b.textContent='Save Entry';b.disabled=false;}
+
 function editEntry(type,id){
-  const d=type==='movie'?allMovies.find(m=>m._id===id):type==='book'?allBooks.find(b=>b._id===id):allDiary.find(d=>d._id===id);
+  const d=type==='movie'?allMovies.find(m=>m._id===id):
+           type==='webseries'?allSeries.find(s=>s._id===id):
+           type==='book'?allBooks.find(b=>b._id===id):
+           allDiary.find(d=>d._id===id);
   if(d)openModal(type,d);
 }
+
 async function deleteEntry(type,id){
   if(!confirm('Delete this entry? This cannot be undone.'))return;
-  const path=type==='movie'?`/movies/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
+  const path=type==='movie'?`/movies/${id}`:type==='webseries'?`/webseries/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
   await api('DELETE',path);
   if(type==='movie'){allMovies=allMovies.filter(m=>m._id!==id);renderMovies();}
+  else if(type==='webseries'){allSeries=allSeries.filter(s=>s._id!==id);renderSeries();}
   else if(type==='book'){allBooks=allBooks.filter(b=>b._id!==id);renderBooks();}
   else{allDiary=allDiary.filter(d=>d._id!==id);renderDiary();}
   updateDashboard();updateCounts();
   showToast('Entry deleted.','');
 }
 
+// ── HELPERS ──
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmtDate(iso){if(!iso)return'';return new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}
 function showToast(msg,type){

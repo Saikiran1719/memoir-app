@@ -18,6 +18,8 @@ app.use('/api/auth',   require('./routes/auth'));
 app.use('/api/movies', require('./routes/movies'));
 app.use('/api/books',  require('./routes/books'));
 app.use('/api/diary',  require('./routes/diary'));
+app.use('/api/webseries', require('./routes/webseries'));
+
 
 // Health check
 app.get('/', (req, res) => res.json({ message: 'Memoir API running ✅' }));
