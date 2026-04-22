@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Memoir — Your Personal Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink: #16120e;
+  --ink2: #2a2218;
+  --paper: #fefcf8;
+  --aged: #f5efe0;
+  --aged2: #ede4cc;
+  --sepia: #b8924a;
+  --sepia2: #d4a85a;
+  --rust: #a8390f;
+  --rust2: #c44a18;
+  --moss: #3d5c35;
+  --moss2: #4e7444;
+  --muted: #7a6e5f;
+  --muted2: #9d9082;
+  --line: rgba(184,146,74,0.2);
+  --line2: rgba(184,146,74,0.12);
+  --shadow-sm: 0 1px 4px rgba(22,18,14,0.08);
+  --shadow-md: 0 4px 16px rgba(22,18,14,0.1);
+  --shadow-lg: 0 12px 40px rgba(22,18,14,0.14);
+  --shadow-xl: 0 24px 64px rgba(22,18,14,0.18);
+  --radius: 6px;
+  --radius-sm: 3px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--aged); color: var(--ink); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+/* AUTH */
+#auth-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--ink); z-index: 500; transition: opacity 0.7s; overflow: hidden; }
+#auth-screen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(184,146,74,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(168,57,15,0.08) 0%, transparent 60%); }
+#auth-screen.hidden { opacity: 0; pointer-events: none; }
+.auth-layout { display: grid; grid-template-columns: 1fr 1fr; width: min(900px,96vw); min-height: 560px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-xl); position: relative; }
+.auth-left { background: linear-gradient(160deg,#1e1812 0%,#2a2015 50%,#1a160f 100%); padding: 52px 44px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+.auth-left::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle,rgba(184,146,74,0.15) 0%,transparent 70%); }
+.auth-left::after { content: ''; position: absolute; bottom: -40px; left: -40px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle,rgba(168,57,15,0.12) 0%,transparent 70%); }
+.auth-brand { position: relative; z-index: 1; }
+.auth-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 700; line-height: 1; color: var(--paper); }
+.auth-brand-name em { color: var(--sepia2); font-style: italic; }
+.auth-brand-tag { font-size: 0.7rem; color: rgba(255,255,255,0.35); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 8px; }
+.auth-quote { position: relative; z-index: 1; font-family: 'Cormorant Garamond',serif; font-size: 1.15rem; font-style: italic; color: rgba(255,255,255,0.45); line-height: 1.7; }
+.auth-features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; }
+.auth-feature { display: flex; align-items: center; gap: 10px; }
+.auth-feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sepia); flex-shrink: 0; }
+.auth-feature span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
+.auth-right { background: var(--paper); padding: 48px 44px; display: flex; flex-direction: column; justify-content: center; }
+.auth-right-title { font-family: 'Cormorant Garamond',serif; font-size: 1.8rem; font-weight: 600; margin-bottom: 4px; }
+.auth-right-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 32px; }
+.auth-tabs { display: flex; background: var(--aged); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 28px; }
+.auth-tab { flex: 1; padding: 8px; font-family: 'Inter',sans-serif; font-size: 0.8rem; font-weight: 500; background: none; border: none; color: var(--muted); cursor: pointer; border-radius: 3px; transition: all 0.2s; }
+.auth-tab.active { background: white; color: var(--ink); box-shadow: var(--shadow-sm); }
+.field-group { margin-bottom: 16px; }
+.field-group label { display: block; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
+.field-group input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--line2); background: var(--aged); border-radius: var(--radius-sm); font-family: 'Inter',sans-serif; font-size: 0.88rem; color: var(--ink); outline: none; transition: all 0.2s; }
+.field-group input:focus { border-color: var(--sepia); background: white; box-shadow: 0 0 0 3px rgba(184,146,74,0.1); }
+.btn-primary { width: 100%; padding: 12px; background: linear-gradient(135deg,var(--ink2) 0%,var(--ink) 100%); color: var(--paper); border: none; border-radius: var(--radius-sm); font-family: 'Inter',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22,18,14,0.3); }
+.auth-msg { font-size: 0.78rem; color: var(--rust); margin-top: 10px; min-height: 18px; text-align: center; }
+.auth-msg.success { color: var(--moss2); }
+@media(max-width:640px){.auth-layout{grid-template-columns:1fr}.auth-left{display:none}.auth-right{padding:40px 28px}}
+
+/* APP */
+#app { display: none; min-height: 100vh; }
+#app.visible { display: flex; }
+
+/* SIDEBAR */
+.sidebar { width: 252px; min-height: 100vh; background: var(--ink); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 50; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); border-right: 1px solid rgba(255,255,255,0.04); }
+.sidebar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg,transparent,var(--sepia),transparent); opacity: 0.4; }
+.sidebar-logo { padding: 28px 24px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sidebar-logo h1 { font-family: 'Cormorant Garamond',serif; font-size: 1.8rem; color: var(--paper); font-weight: 700; line-height: 1; }
+.sidebar-logo h1 em { color: var(--sepia2); font-style: italic; }
+.sidebar-logo p { font-size: 0.65rem; color: rgba(255,255,255,0.25); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; }
+.sidebar-user { padding: 14px; margin: 10px 12px; background: rgba(255,255,255,0.04); border-radius: var(--radius); display: flex; align-items: center; gap: 11px; }
+.user-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,var(--rust) 0%,var(--sepia) 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond',serif; font-size: 1.1rem; color: white; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 8px rgba(168,57,15,0.4); }
+.user-name { font-size: 0.82rem; color: var(--paper); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-email { font-size: 0.68rem; color: rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+nav { flex: 1; padding: 8px 12px 0; }
+.nav-section { padding: 14px 12px 6px; font-size: 0.6rem; color: rgba(255,255,255,0.2); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: rgba(255,255,255,0.45); cursor: pointer; font-size: 0.82rem; font-weight: 500; transition: all 0.18s; border-radius: var(--radius); margin-bottom: 2px; position: relative; }
+.nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.06); }
+.nav-item.active { color: var(--paper); background: rgba(184,146,74,0.12); }
+.nav-item.active::before { content: ''; position: absolute; left: 0; top: 25%; bottom: 25%; width: 3px; background: var(--sepia2); border-radius: 0 2px 2px 0; }
+.nav-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; background: rgba(255,255,255,0.04); flex-shrink: 0; transition: background 0.18s; }
+.nav-item.active .nav-icon { background: rgba(184,146,74,0.15); }
+.nav-count { margin-left: auto; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 10px; min-width: 22px; text-align: center; }
+.nav-item.active .nav-count { background: rgba(184,146,74,0.2); color: var(--sepia2); }
+.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+.btn-logout { width: 100%; padding: 9px 14px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 8px; }
+.btn-logout:hover { background: rgba(168,57,15,0.15); color: #e8907a; border-color: rgba(168,57,15,0.3); }
+.hamburger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; background: var(--ink); border: 1px solid rgba(255,255,255,0.08); width: 42px; height: 42px; border-radius: var(--radius); flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; box-shadow: var(--shadow-md); }
+.hamburger span { display: block; width: 18px; height: 1.5px; background: rgba(255,255,255,0.7); border-radius: 2px; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 40; backdrop-filter: blur(2px); }
+
+/* MAIN */
+.main { margin-left: 252px; flex: 1; min-height: 100vh; padding: 40px 44px; }
+.page { display: none; animation: fadeUp 0.35s cubic-bezier(0.4,0,0.2,1); }
+.page.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* PAGE HEADER */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 32px; gap: 16px; flex-wrap: wrap; }
+.page-header h2 { font-family: 'Cormorant Garamond',serif; font-size: 2.6rem; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; }
+.page-header p { font-size: 0.82rem; color: var(--muted2); margin-top: 4px; }
+.btn-add { padding: 11px 22px; background: linear-gradient(135deg,var(--rust2) 0%,var(--rust) 100%); color: white; border: none; border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(168,57,15,0.3); }
+.btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,57,15,0.4); }
+
+/* DASHBOARD */
+.welcome-bar { margin-bottom: 32px; }
+.welcome-bar h2 { font-family: 'Cormorant Garamond',serif; font-size: 2.4rem; font-weight: 600; letter-spacing: -0.02em; }
+.welcome-bar h2 span { color: var(--sepia); }
+.welcome-bar p { font-size: 0.83rem; color: var(--muted2); margin-top: 4px; }
+.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 40px; }
+.stat-card { background: var(--paper); border-radius: var(--radius); padding: 24px 22px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+.stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+.stat-card.movies::after { background: linear-gradient(90deg,var(--rust),var(--rust2)); }
+.stat-card.books::after  { background: linear-gradient(90deg,var(--moss),var(--moss2)); }
+.stat-card.diary::after  { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
+.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 16px; }
+.stat-card.movies .stat-icon { background: rgba(168,57,15,0.08); }
+.stat-card.books  .stat-icon { background: rgba(61,92,53,0.08); }
+.stat-card.diary  .stat-icon { background: rgba(184,146,74,0.1); }
+.stat-num { font-family: 'Cormorant Garamond',serif; font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 3px; }
+.stat-card.movies .stat-num { color: var(--rust); }
+.stat-card.books  .stat-num { color: var(--moss); }
+.stat-card.diary  .stat-num { color: var(--sepia); }
+.stat-label { font-size: 0.72rem; color: var(--muted2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
+.stat-sub { font-size: 0.72rem; color: var(--muted2); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line2); }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.section-title { font-family: 'Cormorant Garamond',serif; font-size: 1.4rem; font-weight: 600; }
+
+/* CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(270px,1fr)); gap: 18px; }
+.entry-card { background: var(--paper); border-radius: var(--radius); padding: 0; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.9); transition: all 0.25s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.entry-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.card-accent { height: 4px; }
+.entry-card.movie .card-accent { background: linear-gradient(90deg,var(--rust),#e05a2a); }
+.entry-card.book  .card-accent { background: linear-gradient(90deg,var(--moss),#62904f); }
+.entry-card.diary-entry .card-accent { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
+.card-body { padding: 18px 20px 14px; flex: 1; display: flex; flex-direction: column; }
+.card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
+.card-title { font-family: 'Cormorant Garamond',serif; font-size: 1.15rem; font-weight: 700; line-height: 1.3; flex: 1; }
+.card-actions { display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
+.entry-card:hover .card-actions { opacity: 1; }
+.btn-icon { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--line); background: var(--aged); cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; color: var(--muted); }
+.btn-icon:hover { background: var(--rust); color: white; border-color: var(--rust); }
+.btn-icon.edit:hover { background: var(--sepia); border-color: var(--sepia); color: white; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.tag { padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
+.tag.genre   { background: rgba(168,57,15,0.08); color: var(--rust); border: 1px solid rgba(168,57,15,0.15); }
+.tag.year    { background: rgba(122,110,95,0.08); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
+.tag.status-reading      { background: rgba(184,146,74,0.12); color: #7a5e2a; border: 1px solid rgba(184,146,74,0.2); }
+.tag.status-completed    { background: rgba(61,92,53,0.1); color: var(--moss); border: 1px solid rgba(61,92,53,0.18); }
+.tag.status-paused       { background: rgba(122,110,95,0.1); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
+.tag.status-want-to-read { background: rgba(22,18,14,0.06); color: var(--ink2); border: 1px solid rgba(22,18,14,0.1); }
+.stars { display: flex; gap: 2px; margin-bottom: 8px; }
+.star { font-size: 0.78rem; }
+.star.filled { color: var(--sepia2); }
+.star.empty  { color: rgba(184,146,74,0.2); }
+.card-note { font-size: 0.8rem; color: var(--muted); line-height: 1.6; font-style: italic; }
+.card-footer { padding: 10px 20px 14px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line2); margin-top: 12px; }
+.card-date   { font-size: 0.68rem; color: var(--muted2); font-weight: 500; }
+.card-author { font-size: 0.72rem; color: var(--muted); }
+.empty-state { text-align: center; padding: 72px 20px; color: var(--muted2); }
+.empty-icon  { font-size: 3.5rem; margin-bottom: 14px; opacity: 0.35; line-height: 1; }
+.empty-title { font-family: 'Cormorant Garamond',serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
+.empty-sub   { font-size: 0.82rem; }
+
+/* TOOLBAR */
+.toolbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; opacity: 0.35; pointer-events: none; }
+.search-box { width: 100%; padding: 10px 14px 10px 34px; border: 1.5px solid var(--line); background: var(--paper); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.84rem; color: var(--ink); outline: none; transition: all 0.2s; }
+.search-box:focus { border-color: var(--sepia); box-shadow: 0 0 0 3px rgba(184,146,74,0.1); }
+.filter-select { padding: 10px 14px; border: 1.5px solid var(--line); background: var(--paper); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.84rem; color: var(--ink); outline: none; cursor: pointer; transition: border-color 0.2s; }
+.filter-select:focus { border-color: var(--sepia); }
+
+/* DIARY */
+.diary-list { display: flex; flex-direction: column; gap: 14px; }
+.diary-card { background: var(--paper); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.9); transition: all 0.25s; position: relative; }
+.diary-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.diary-card-inner { display: flex; }
+.diary-sidebar-strip { width: 4px; background: linear-gradient(180deg,var(--sepia) 0%,var(--sepia2) 100%); flex-shrink: 0; }
+.diary-card-content { padding: 20px 24px; flex: 1; position: relative; }
+.diary-actions { position: absolute; top: 14px; right: 16px; display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s; }
+.diary-card:hover .diary-actions { opacity: 1; }
+.diary-date-badge { display: inline-block; font-size: 0.68rem; color: var(--muted2); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: var(--aged); padding: 3px 9px; border-radius: 20px; border: 1px solid var(--line2); margin-bottom: 12px; }
+.diary-content { font-family: 'Cormorant Garamond',serif; font-size: 1.02rem; line-height: 1.85; color: var(--ink); font-style: italic; white-space: pre-wrap; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(22,18,14,0.7); z-index: 300; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--paper); width: min(540px,95vw); border-radius: 10px; padding: 0; box-shadow: var(--shadow-xl); position: relative; max-height: 92vh; overflow-y: auto; animation: modalIn 0.28s cubic-bezier(0.34,1.56,0.64,1); border: 1px solid rgba(255,255,255,0.9); }
+@keyframes modalIn { from{opacity:0;transform:scale(0.94) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.modal-accent { height: 3px; background: linear-gradient(90deg,var(--rust),var(--sepia),var(--moss)); border-radius: 10px 10px 0 0; }
+.modal-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--line2); position: relative; }
+.modal-title { font-family: 'Cormorant Garamond',serif; font-size: 1.6rem; font-weight: 700; }
+.modal-subtitle { font-size: 0.78rem; color: var(--muted2); margin-top: 3px; }
+.modal-close { position: absolute; top: 18px; right: 20px; background: var(--aged); border: 1px solid var(--line); font-size: 0.85rem; cursor: pointer; color: var(--muted); transition: all 0.15s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+.modal-close:hover { background: var(--rust); color: white; border-color: var(--rust); }
+.modal-body { padding: 24px 32px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-field { margin-bottom: 18px; }
+.form-field label { display: block; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 7px; font-weight: 600; }
+.form-field input, .form-field select, .form-field textarea { width: 100%; padding: 10px 13px; border: 1.5px solid var(--line); background: var(--aged); border-radius: var(--radius-sm); font-family: 'Inter',sans-serif; font-size: 0.86rem; color: var(--ink); outline: none; transition: all 0.2s; }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--sepia); background: white; box-shadow: 0 0 0 3px rgba(184,146,74,0.08); }
+.form-field textarea { resize: vertical; min-height: 100px; line-height: 1.65; font-family: 'Cormorant Garamond',serif; font-size: 1rem; font-style: italic; }
+.star-rating { display: flex; gap: 4px; margin-top: 4px; }
+.star-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(184,146,74,0.2); transition: all 0.15s; line-height: 1; }
+.star-btn.active { color: var(--sepia2); }
+.star-btn:hover { transform: scale(1.25); color: var(--sepia2); }
+.modal-footer { padding: 18px 32px 24px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--line2); }
+.btn-secondary { padding: 10px 20px; background: none; color: var(--muted); border: 1.5px solid var(--line); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.btn-secondary:hover { border-color: var(--muted2); color: var(--ink); }
+.btn-save { padding: 10px 28px; background: linear-gradient(135deg,var(--rust2) 0%,var(--rust) 100%); color: white; border: none; border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(168,57,15,0.25); }
+.btn-save:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(168,57,15,0.35); }
+.btn-save:disabled { background: var(--muted2); box-shadow: none; cursor: not-allowed; transform: none; }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* TOAST */
+.toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 600; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: var(--ink); color: var(--paper); padding: 12px 18px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 500; box-shadow: var(--shadow-xl); animation: toastIn 0.35s cubic-bezier(0.34,1.4,0.64,1); border-left: 3px solid var(--sepia); max-width: 300px; display: flex; align-items: center; gap: 10px; }
+.toast.success { border-left-color: var(--moss2); }
+.toast.error   { border-left-color: var(--rust); }
+@keyframes toastIn { from{opacity:0;transform:translateX(24px) scale(0.95)} to{opacity:1;transform:translateX(0) scale(1)} }
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .overlay{display:block;opacity:0;pointer-events:none;transition:opacity 0.3s}.overlay.open{opacity:1;pointer-events:all}
+  .hamburger{display:flex}.main{margin-left:0;padding:72px 20px 28px}
+  .stats-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .form-row{grid-template-columns:1fr}.cards-grid{grid-template-columns:1fr}
+  .modal-body,.modal-footer,.modal-header{padding-left:22px;padding-right:22px}
+}
+@media(max-width:520px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .page-header h2,.welcome-bar h2{font-size:1.9rem}
+  .stat-num{font-size:2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <div class="auth-brand-name">Mem<em>oir</em></div>
+        <div class="auth-brand-tag">Personal Vault</div>
+      </div>
+      <div class="auth-quote">A life worth living is worth recording.</div>
+      <div class="auth-features">
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Track every movie you've watched</span></div>
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Log your reading journey</span></div>
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Keep a private diary</span></div>
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Synced to MongoDB Atlas</span></div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-right-title">Welcome back</div>
+      <div class="auth-right-sub">Sign in to access your vault</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+      <div id="login-form">
+        <div class="field-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/></div>
+        <div class="field-group"><label>Password</label><input type="password" id="login-password" placeholder="••••••••"/></div>
+        <button class="btn-primary" id="btn-login" onclick="handleLogin()">Enter Memoir →</button>
+        <div class="auth-msg" id="login-msg"></div>
+      </div>
+      <div id="signup-form" style="display:none">
+        <div class="field-group"><label>Full Name</label><input type="text" id="signup-name" placeholder="Sai Kiran"/></div>
+        <div class="field-group"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"/></div>
+        <div class="field-group"><label>Password</label><input type="password" id="signup-password" placeholder="min. 6 characters"/></div>
+        <button class="btn-primary" id="btn-signup" onclick="handleSignup()">Create Account →</button>
+        <div class="auth-msg" id="signup-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- APP -->
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><h1>Mem<em>oir</em></h1><p>Personal Vault</p></div>
+    <div style="padding:0 0 0 0">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="user-avatar">S</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">User</div>
+          <div class="user-email" id="user-email">user@email.com</div>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-section">Main</div>
+      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard',this)"><div class="nav-icon">◈</div>Dashboard</div>
+      <div class="nav-section">Collections</div>
+      <div class="nav-item" data-page="movies" onclick="showPage('movies',this)"><div class="nav-icon">🎬</div>Movies<span class="nav-count" id="nc-movies">0</span></div>
+      <div class="nav-item" data-page="books"  onclick="showPage('books',this)"> <div class="nav-icon">📚</div>Books <span class="nav-count" id="nc-books">0</span></div>
+      <div class="nav-section">Personal</div>
+      <div class="nav-item" data-page="diary"  onclick="showPage('diary',this)"> <div class="nav-icon">✍️</div>Diary <span class="nav-count" id="nc-diary">0</span></div>
+    </nav>
+    <div class="sidebar-footer"><button class="btn-logout" onclick="handleLogout()">⟵ &nbsp;Sign Out</button></div>
+  </aside>
+  <button class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="welcome-bar">
+        <h2 id="welcome-msg">Good evening, <span>there</span></h2>
+        <p>Here's a snapshot of your personal vault</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card movies" onclick="showPage('movies',document.querySelector('[data-page=movies]'))">
+          <div class="stat-icon">🎬</div><div class="stat-num" id="stat-movies">0</div>
+          <div class="stat-label">Movies Watched</div><div class="stat-sub" id="stat-movies-sub">Start tracking</div>
+        </div>
+        <div class="stat-card books" onclick="showPage('books',document.querySelector('[data-page=books]'))">
+          <div class="stat-icon">📚</div><div class="stat-num" id="stat-books">0</div>
+          <div class="stat-label">Books Logged</div><div class="stat-sub" id="stat-books-sub">Start tracking</div>
+        </div>
+        <div class="stat-card diary" onclick="showPage('diary',document.querySelector('[data-page=diary]'))">
+          <div class="stat-icon">✍️</div><div class="stat-num" id="stat-diary">0</div>
+          <div class="stat-label">Diary Entries</div><div class="stat-sub" id="stat-diary-sub">Start writing</div>
+        </div>
+      </div>
+      <div class="section-header"><div class="section-title">Recent Activity</div></div>
+      <div class="cards-grid" id="recent-grid">
+        <div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, book, or diary entry.</p></div>
+      </div>
+    </div>
+
+    <!-- MOVIES -->
+    <div class="page" id="page-movies">
+      <div class="page-header">
+        <div><h2>Movies</h2><p>Everything you've watched</p></div>
+        <button class="btn-add" onclick="openModal('movie')">＋ Add Movie</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><input class="search-box" id="movie-search" placeholder="Search by title or genre…" oninput="renderMovies()"/></div>
+        <select class="filter-select" id="movie-genre-filter" onchange="renderMovies()">
+          <option value="">All Genres</option>
+          <option>Action</option><option>Comedy</option><option>Drama</option><option>Horror</option>
+          <option>Sci-Fi</option><option>Romance</option><option>Thriller</option><option>Animation</option>
+          <option>Documentary</option><option>Fantasy</option><option>Mystery</option><option>Other</option>
+        </select>
+        <select class="filter-select" id="movie-rating-filter" onchange="renderMovies()">
+          <option value="">All Ratings</option><option value="5">★★★★★</option><option value="4">★★★★+</option><option value="3">★★★+</option>
+        </select>
+      </div>
+      <div class="cards-grid" id="movies-grid"></div>
+    </div>
+
+    <!-- BOOKS -->
+    <div class="page" id="page-books">
+      <div class="page-header">
+        <div><h2>Books</h2><p>Your reading journey</p></div>
+        <button class="btn-add" onclick="openModal('book')">＋ Add Book</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><input class="search-box" id="book-search" placeholder="Search by title or author…" oninput="renderBooks()"/></div>
+        <select class="filter-select" id="book-status-filter" onchange="renderBooks()">
+          <option value="">All Status</option><option>Reading</option><option>Completed</option><option>Paused</option><option>Want to Read</option>
+        </select>
+      </div>
+      <div class="cards-grid" id="books-grid"></div>
+    </div>
+
+    <!-- DIARY -->
+    <div class="page" id="page-diary">
+      <div class="page-header">
+        <div><h2>Diary</h2><p>Your private thoughts</p></div>
+        <button class="btn-add" onclick="openModal('diary')">＋ New Entry</button>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap"><input class="search-box" id="diary-search" placeholder="Search entries…" oninput="renderDiary()"/></div>
+      </div>
+      <div class="diary-list" id="diary-list"></div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-accent"></div>
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title" id="modal-title">Add Entry</div>
+      <div class="modal-subtitle" id="modal-subtitle">Fill in the details below</div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" id="btn-save" onclick="saveEntry()">Save Entry</button>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+const API='http://localhost:5000/api';
+let token=localStorage.getItem('memoir_token')||null;
+let currentUser=JSON.parse(localStorage.getItem('memoir_user')||'null');
+let currentModal=null,editingId=null,currentRating=0;
+let allMovies=[],allBooks=[],allDiary=[];
+
+async function api(method,path,body=null){
+  const opts={method,headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})}};
+  if(body)opts.body=JSON.stringify(body);
+  const res=await fetch(API+path,opts);
+  const data=await res.json();
+  if(!res.ok)throw new Error(data.message||'Something went wrong');
+  return data;
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='signup')));
+  document.getElementById('login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display=tab==='signup'?'block':'none';
+  document.querySelector('.auth-right-title').textContent=tab==='login'?'Welcome back':'Create your vault';
+  document.querySelector('.auth-right-sub').textContent=tab==='login'?'Sign in to access your vault':'Set up your personal account';
+}
+async function handleSignup(){
+  const name=document.getElementById('signup-name').value.trim(),email=document.getElementById('signup-email').value.trim(),password=document.getElementById('signup-password').value;
+  const msg=document.getElementById('signup-msg'),btn=document.getElementById('btn-signup');
+  if(!name||!email||!password){msg.textContent='All fields are required.';return;}
+  if(password.length<6){msg.textContent='Password must be at least 6 characters.';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  try{const d=await api('POST','/auth/signup',{name,email,password});loginUser(d.token,d.user);}
+  catch(err){msg.textContent=err.message;btn.textContent='Create Account →';btn.disabled=false;}
+}
+async function handleLogin(){
+  const email=document.getElementById('login-email').value.trim(),password=document.getElementById('login-password').value;
+  const msg=document.getElementById('login-msg'),btn=document.getElementById('btn-login');
+  if(!email||!password){msg.textContent='Email and password are required.';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  try{const d=await api('POST','/auth/login',{email,password});loginUser(d.token,d.user);}
+  catch(err){msg.textContent=err.message;btn.textContent='Enter Memoir →';btn.disabled=false;}
+}
+function loginUser(tok,user){
+  token=tok;currentUser=user;
+  localStorage.setItem('memoir_token',tok);localStorage.setItem('memoir_user',JSON.stringify(user));
+  document.getElementById('user-name').textContent=user.name;
+  document.getElementById('user-email').textContent=user.email;
+  document.getElementById('user-avatar').textContent=user.name.charAt(0).toUpperCase();
+  setWelcome();
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('app').classList.add('visible');
+  loadAll();
+}
+function handleLogout(){
+  token=null;currentUser=null;
+  localStorage.removeItem('memoir_token');localStorage.removeItem('memoir_user');
+  allMovies=[];allBooks=[];allDiary=[];
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('auth-screen').classList.remove('hidden');
+  document.getElementById('login-email').value='';document.getElementById('login-password').value='';
+  document.getElementById('login-msg').textContent='';
+  document.getElementById('btn-login').textContent='Enter Memoir →';document.getElementById('btn-login').disabled=false;
+}
+function setWelcome(){
+  const h=new Date().getHours(),greet=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  document.getElementById('welcome-msg').innerHTML=`${greet}, <span style="color:var(--sepia)">${currentUser.name.split(' ')[0]}</span>`;
+}
+
+async function loadAll(){
+  try{
+    [allMovies,allBooks,allDiary]=await Promise.all([api('GET','/movies'),api('GET','/books'),api('GET','/diary')]);
+    updateDashboard();renderMovies();renderBooks();renderDiary();updateCounts();
+  }catch(err){showToast('Failed to load data.','error');}
+}
+function updateCounts(){
+  document.getElementById('nc-movies').textContent=allMovies.length;
+  document.getElementById('nc-books').textContent=allBooks.length;
+  document.getElementById('nc-diary').textContent=allDiary.length;
+}
+
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  if(el)el.classList.add('active');
+  closeSidebar();
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+
+function updateDashboard(){
+  document.getElementById('stat-movies').textContent=allMovies.length;
+  document.getElementById('stat-books').textContent=allBooks.length;
+  document.getElementById('stat-diary').textContent=allDiary.length;
+  const rated=allMovies.filter(m=>m.rating>0);
+  const avg=rated.length?(rated.reduce((s,m)=>s+m.rating,0)/rated.length).toFixed(1):null;
+  document.getElementById('stat-movies-sub').textContent=avg?`Avg rating: ${avg} ★`:(allMovies.length?'No ratings yet':'Start tracking');
+  const done=allBooks.filter(b=>b.status==='Completed').length;
+  document.getElementById('stat-books-sub').textContent=allBooks.length?`${done} completed`:'Start tracking';
+  const last=allDiary[0];
+  document.getElementById('stat-diary-sub').textContent=last?`Last: ${fmtDate(last.createdAt)}`:'Start writing';
+  const recent=[...allMovies.map(m=>({...m,_type:'movie'})),...allBooks.map(b=>({...b,_type:'book'})),...allDiary.map(d=>({...d,_type:'diary'}))]
+    .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,6);
+  const grid=document.getElementById('recent-grid');
+  grid.innerHTML=recent.length?recent.map(i=>i._type==='movie'?movieCard(i):i._type==='book'?bookCard(i):diaryCardCompact(i)).join('')
+    :`<div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, book, or diary entry.</p></div>`;
+}
+
+function renderMovies(){
+  const q=(document.getElementById('movie-search')?.value||'').toLowerCase();
+  const gf=document.getElementById('movie-genre-filter')?.value||'';
+  const rf=parseInt(document.getElementById('movie-rating-filter')?.value||'0');
+  const items=allMovies.filter(m=>(!q||m.title.toLowerCase().includes(q)||(m.genre||'').toLowerCase().includes(q))&&(!gf||m.genre===gf)&&(!rf||(m.rating||0)>=rf));
+  document.getElementById('movies-grid').innerHTML=items.length?items.map(movieCard).join('')
+    :`<div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-title">No movies yet</div><p class="empty-sub">Add your first watched movie.</p></div>`;
+}
+function movieCard(m){
+  const s=[1,2,3,4,5].map(i=>`<span class="star ${i<=(m.rating||0)?'filled':'empty'}">★</span>`).join('');
+  return `<div class="entry-card movie"><div class="card-accent"></div><div class="card-body">
+    <div class="card-header"><div class="card-title">${esc(m.title)}</div>
+    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('movie','${m._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('movie','${m._id}')">✕</button></div></div>
+    <div class="card-tags">${m.genre?`<span class="tag genre">${esc(m.genre)}</span>`:''} ${m.year?`<span class="tag year">${m.year}</span>`:''}</div>
+    ${m.rating?`<div class="stars">${s}</div>`:''}
+    ${m.notes?`<div class="card-note">${esc(m.notes)}</div>`:''}</div>
+    <div class="card-footer"><span class="card-date">${m.watchedDate||fmtDate(m.createdAt)}</span></div></div>`;
+}
+
+function renderBooks(){
+  const q=(document.getElementById('book-search')?.value||'').toLowerCase();
+  const sf=document.getElementById('book-status-filter')?.value||'';
+  const items=allBooks.filter(b=>(!q||b.title.toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q))&&(!sf||b.status===sf));
+  document.getElementById('books-grid').innerHTML=items.length?items.map(bookCard).join('')
+    :`<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">No books yet</div><p class="empty-sub">Log your first book.</p></div>`;
+}
+function bookCard(b){
+  const sc=(b.status||'').toLowerCase().replace(/\s+/g,'-');
+  const s=[1,2,3,4,5].map(i=>`<span class="star ${i<=(b.rating||0)?'filled':'empty'}">★</span>`).join('');
+  return `<div class="entry-card book"><div class="card-accent"></div><div class="card-body">
+    <div class="card-header"><div class="card-title">${esc(b.title)}</div>
+    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('book','${b._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('book','${b._id}')">✕</button></div></div>
+    <div class="card-tags">${b.status?`<span class="tag status-${sc}">${b.status}</span>`:''}</div>
+    ${b.rating?`<div class="stars">${s}</div>`:''}
+    ${b.notes?`<div class="card-note">${esc(b.notes)}</div>`:''}</div>
+    <div class="card-footer">${b.author?`<span class="card-author">by ${esc(b.author)}</span>`:'<span></span>'}<span class="card-date">${fmtDate(b.createdAt)}</span></div></div>`;
+}
+
+function renderDiary(){
+  const q=(document.getElementById('diary-search')?.value||'').toLowerCase();
+  const items=allDiary.filter(d=>!q||d.content.toLowerCase().includes(q));
+  document.getElementById('diary-list').innerHTML=items.length?items.map(diaryCardFull).join('')
+    :`<div class="empty-state"><div class="empty-icon">✍️</div><div class="empty-title">No entries yet</div><p class="empty-sub">Pour your thoughts here.</p></div>`;
+}
+function diaryCardFull(d){
+  return `<div class="diary-card"><div class="diary-card-inner"><div class="diary-sidebar-strip"></div><div class="diary-card-content">
+    <div class="diary-actions"><button class="btn-icon edit" onclick="editEntry('diary','${d._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('diary','${d._id}')">✕</button></div>
+    <div class="diary-date-badge">📅 ${fmtDate(d.createdAt)}</div>
+    <div class="diary-content">${esc(d.content)}</div>
+    </div></div></div>`;
+}
+function diaryCardCompact(d){
+  const p=d.content.length>130?d.content.slice(0,130)+'…':d.content;
+  return `<div class="entry-card diary-entry"><div class="card-accent"></div><div class="card-body">
+    <div class="card-header"><div class="card-title" style="font-size:0.7rem;font-family:'Inter',sans-serif;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:0.1em">Diary</div>
+    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('diary','${d._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('diary','${d._id}')">✕</button></div></div>
+    <div class="card-note" style="font-family:'Cormorant Garamond',serif;font-size:0.97rem;font-style:italic">${esc(p)}</div></div>
+    <div class="card-footer"><span class="card-date">${fmtDate(d.createdAt)}</span></div></div>`;
+}
+
+function openModal(type,data=null){
+  currentModal=type;editingId=data?data._id:null;currentRating=data?(data.rating||0):0;
+  const cfg={movie:{title:data?'Edit Movie':'Add Movie',sub:data?'Update the details':'Log a movie you watched'},
+             book: {title:data?'Edit Book':'Add Book',  sub:data?'Update the details':'Log a book you read'},
+             diary:{title:data?'Edit Entry':'New Entry', sub:data?'Update your entry':'Write freely — this is private'}};
+  document.getElementById('modal-title').textContent=cfg[type].title;
+  document.getElementById('modal-subtitle').textContent=cfg[type].sub;
+  document.getElementById('modal-body').innerHTML=type==='movie'?movieForm(data):type==='book'?bookForm(data):diaryForm(data);
+  if(type!=='diary')renderStars(currentRating);
+  document.getElementById('btn-save').textContent='Save Entry';
+  document.getElementById('btn-save').disabled=false;
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(()=>document.querySelector('#modal-body input,#modal-body textarea')?.focus(),100);
+}
+function movieForm(d){return`<div class="form-row">
+  <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Inception"/></div>
+  <div class="form-field"><label>Year</label><input id="f-year" type="number" value="${d?.year||''}" placeholder="2024" min="1900" max="2099"/></div>
+</div><div class="form-row">
+  <div class="form-field"><label>Genre</label><select id="f-genre"><option value="">Select genre</option>
+    ${['Action','Comedy','Drama','Horror','Sci-Fi','Romance','Thriller','Animation','Documentary','Fantasy','Mystery','Other'].map(g=>`<option ${d?.genre===g?'selected':''}>${g}</option>`).join('')}
+  </select></div>
+  <div class="form-field"><label>Watched Date</label><input id="f-watched" type="date" value="${d?.watchedDate||''}"/></div>
+</div>
+<div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
+<div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="What did you think of this movie?">${esc(d?.notes||'')}</textarea></div>`;}
+function bookForm(d){return`<div class="form-row">
+  <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Atomic Habits"/></div>
+  <div class="form-field"><label>Author</label><input id="f-author" value="${esc(d?.author||'')}" placeholder="e.g. James Clear"/></div>
+</div><div class="form-row">
+  <div class="form-field"><label>Status</label><select id="f-status">${['Reading','Completed','Paused','Want to Read'].map(s=>`<option ${d?.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+  <div class="form-field"><label>Pages</label><input id="f-pages" type="number" value="${d?.pages||''}" placeholder="e.g. 320"/></div>
+</div>
+<div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
+<div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts, key takeaways…">${esc(d?.notes||'')}</textarea></div>`;}
+function diaryForm(d){return`<div class="form-field"><label>Your Thoughts *</label><textarea id="f-content" style="min-height:200px" placeholder="Write freely… this is just for you.">${esc(d?.content||'')}</textarea></div>`;}
+function renderStars(sel){const c=document.getElementById('star-rating');if(!c)return;c.innerHTML=[1,2,3,4,5].map(i=>`<button type="button" class="star-btn ${i<=sel?'active':''}" onclick="setRating(${i})">★</button>`).join('');}
+function setRating(n){currentRating=n;renderStars(n);}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');editingId=null;currentModal=null;currentRating=0;}
+function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+
+async function saveEntry(){
+  const btn=document.getElementById('btn-save');
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  try{if(currentModal==='movie')await saveMovie();else if(currentModal==='book')await saveBook();else await saveDiary();}
+  catch(err){showToast(err.message,'error');btn.textContent='Save Entry';btn.disabled=false;}
+}
+async function saveMovie(){
+  const title=document.getElementById('f-title').value.trim();
+  if(!title){showToast('Title is required.','error');resetBtn();return;}
+  const body={title,year:document.getElementById('f-year').value||'',genre:document.getElementById('f-genre').value||'',watchedDate:document.getElementById('f-watched').value||'',rating:currentRating,notes:document.getElementById('f-notes').value.trim()};
+  if(editingId){const u=await api('PUT',`/movies/${editingId}`,body);allMovies=allMovies.map(m=>m._id===editingId?u:m);showToast('Movie updated!','success');}
+  else{const c=await api('POST','/movies',body);allMovies.unshift(c);showToast('Movie added! 🎬','success');}
+  closeModal();renderMovies();updateDashboard();updateCounts();
+}
+async function saveBook(){
+  const title=document.getElementById('f-title').value.trim();
+  if(!title){showToast('Title is required.','error');resetBtn();return;}
+  const body={title,author:document.getElementById('f-author').value.trim()||'',status:document.getElementById('f-status').value||'Reading',pages:document.getElementById('f-pages').value||'',rating:currentRating,notes:document.getElementById('f-notes').value.trim()};
+  if(editingId){const u=await api('PUT',`/books/${editingId}`,body);allBooks=allBooks.map(b=>b._id===editingId?u:b);showToast('Book updated!','success');}
+  else{const c=await api('POST','/books',body);allBooks.unshift(c);showToast('Book added! 📚','success');}
+  closeModal();renderBooks();updateDashboard();updateCounts();
+}
+async function saveDiary(){
+  const content=document.getElementById('f-content').value.trim();
+  if(!content){showToast('Write something first.','error');resetBtn();return;}
+  if(editingId){const u=await api('PUT',`/diary/${editingId}`,{content});allDiary=allDiary.map(d=>d._id===editingId?u:d);showToast('Entry updated!','success');}
+  else{const c=await api('POST','/diary',{content});allDiary.unshift(c);showToast('Entry saved! ✍️','success');}
+  closeModal();renderDiary();updateDashboard();updateCounts();
+}
+function resetBtn(){const b=document.getElementById('btn-save');b.textContent='Save Entry';b.disabled=false;}
+function editEntry(type,id){
+  const d=type==='movie'?allMovies.find(m=>m._id===id):type==='book'?allBooks.find(b=>b._id===id):allDiary.find(d=>d._id===id);
+  if(d)openModal(type,d);
+}
+async function deleteEntry(type,id){
+  if(!confirm('Delete this entry? This cannot be undone.'))return;
+  const path=type==='movie'?`/movies/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
+  await api('DELETE',path);
+  if(type==='movie'){allMovies=allMovies.filter(m=>m._id!==id);renderMovies();}
+  else if(type==='book'){allBooks=allBooks.filter(b=>b._id!==id);renderBooks();}
+  else{allDiary=allDiary.filter(d=>d._id!==id);renderDiary();}
+  updateDashboard();updateCounts();
+  showToast('Entry deleted.','');
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDate(iso){if(!iso)return'';return new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}
+function showToast(msg,type){
+  const t=document.createElement('div');t.className=`toast ${type}`;
+  const icons={success:'✓',error:'✕','':'·'};
+  t.innerHTML=`<span style="font-size:1rem;flex-shrink:0">${icons[type]||'·'}</span>${msg}`;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(()=>{t.style.transition='opacity 0.3s';t.style.opacity='0';setTimeout(()=>t.remove(),300);},3000);
+}
+
+if(token&&currentUser)loginUser(token,currentUser);
+</script>
+</body>
+</html>
