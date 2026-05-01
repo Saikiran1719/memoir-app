@@ -8,6 +8,7 @@ const movieSchema = new mongoose.Schema({
   rating:      { type: Number, min: 0, max: 5, default: 0 },
   watchedDate: { type: String, default: '' },
   notes:       { type: String, default: '' },
+  tags:        { type: [String], default: [] },
   favorited:   { type: Boolean, default: false }
 }, { timestamps: true });
 

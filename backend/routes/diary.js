@@ -15,6 +15,7 @@ router.post('/', auth, async (req, res) => {
     const entry = await Diary.create({
       content: req.body.content,
       mood:    req.body.mood || '',
+      tags:    req.body.tags || [],
       userId:  req.userId
     });
     res.status(201).json(entry);
@@ -26,6 +27,7 @@ router.put('/:id', auth, async (req, res) => {
     const update = {};
     if (req.body.content   !== undefined) update.content   = req.body.content;
     if (req.body.mood      !== undefined) update.mood      = req.body.mood;
+    if (req.body.tags      !== undefined) update.tags      = req.body.tags;
     if (req.body.favorited !== undefined) update.favorited = req.body.favorited;
     const entry = await Diary.findOneAndUpdate(
       { _id: req.params.id, userId: req.userId },
