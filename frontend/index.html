@@ -281,6 +281,26 @@ nav{flex:1;padding:8px 12px 0;overflow-y:auto}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ── DELETE CONFIRM MODAL ── */
+.del-overlay{display:none;position:fixed;inset:0;background:rgba(22,18,14,.75);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.del-overlay.open{display:flex}
+.del-box{background:var(--paper);width:min(400px,92vw);border-radius:12px;padding:0;box-shadow:var(--shadow-xl);animation:modalIn .25s cubic-bezier(.34,1.56,.64,1);border:1px solid rgba(255,255,255,.9)}
+[data-theme="dark"] .del-box{border-color:rgba(255,255,255,.08)}
+.del-accent{height:4px;background:linear-gradient(90deg,#c0392b,#e74c3c,#c0392b);border-radius:12px 12px 0 0}
+.del-body{padding:26px 28px 22px}
+.del-icon{font-size:2rem;margin-bottom:10px}
+.del-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;margin-bottom:5px}
+.del-sub{font-size:.8rem;color:var(--muted2);margin-bottom:18px;line-height:1.5}
+.del-pw-wrap{position:relative}
+.del-pw-wrap input{width:100%;box-sizing:border-box;padding:10px 40px 10px 12px;border:1.5px solid var(--line2);border-radius:8px;background:var(--bg2);color:var(--ink);font-size:.9rem;outline:none;transition:border .2s}
+.del-pw-wrap input:focus{border-color:#e74c3c}
+.del-pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:.9rem;color:var(--muted2)}
+.del-error{color:#e74c3c;font-size:.78rem;margin-top:6px;min-height:18px}
+.del-footer{display:flex;gap:10px;justify-content:flex-end;padding:0 28px 22px}
+.btn-del-confirm{background:#c0392b;color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-del-confirm:hover{background:#a93226}
+.btn-del-confirm:disabled{opacity:.5;cursor:not-allowed}
+
 /* ── TOAST ── */
 .toast-container{position:fixed;bottom:28px;right:28px;z-index:600;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
 .toast{background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:var(--radius);font-size:.82rem;font-weight:500;box-shadow:var(--shadow-xl);animation:toastIn .35s cubic-bezier(.34,1.4,.64,1);border-left:3px solid var(--sepia);max-width:300px;display:flex;align-items:center;gap:10px}
@@ -630,6 +650,29 @@ nav{flex:1;padding:8px 12px 0;overflow-y:auto}
     </div>
   </div>
 </div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="del-overlay" id="del-overlay" onclick="cancelDeleteModal(event)">
+  <div class="del-box">
+    <div class="del-accent"></div>
+    <div class="del-body">
+      <div class="del-icon">🗑️</div>
+      <div class="del-title">Confirm Deletion</div>
+      <div class="del-sub">This action cannot be undone. Enter your password to permanently delete this entry.</div>
+      <div class="del-pw-wrap">
+        <input type="password" id="del-pw-input" placeholder="Enter your password"
+          oninput="clearDelError()" onkeydown="if(event.key==='Enter')submitDeletePassword()"/>
+        <button class="del-pw-toggle" type="button" onclick="toggleDelPw()" title="Show/hide password">👁</button>
+      </div>
+      <div class="del-error" id="del-error"></div>
+    </div>
+    <div class="del-footer">
+      <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn-del-confirm" id="btn-del-confirm" onclick="submitDeletePassword()">Delete</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toast-container"></div>
 
 <script>
@@ -1330,8 +1373,40 @@ function editEntry(type,id){
            allDiary.find(d=>d._id===id);
   if(d)openModal(type,d);
 }
-async function deleteEntry(type,id){
-  if(!confirm('Delete this entry? This cannot be undone.'))return;
+/* ── DELETE WITH PASSWORD CONFIRM ── */
+let _delType=null,_delId=null;
+function deleteEntry(type,id){
+  _delType=type;_delId=id;
+  const inp=document.getElementById('del-pw-input');
+  if(inp){inp.value='';inp.type='password';}
+  document.getElementById('del-error').textContent='';
+  document.getElementById('btn-del-confirm').disabled=false;
+  document.getElementById('del-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('del-pw-input')?.focus(),120);
+}
+function closeDeleteModal(){
+  document.getElementById('del-overlay').classList.remove('open');
+  _delType=null;_delId=null;
+}
+function cancelDeleteModal(e){if(e.target===document.getElementById('del-overlay'))closeDeleteModal();}
+function clearDelError(){document.getElementById('del-error').textContent='';}
+function toggleDelPw(){
+  const inp=document.getElementById('del-pw-input');
+  if(inp)inp.type=inp.type==='password'?'text':'password';
+}
+async function submitDeletePassword(){
+  const pw=(document.getElementById('del-pw-input')?.value||'').trim();
+  if(!pw){document.getElementById('del-error').textContent='Please enter your password.';return;}
+  const btn=document.getElementById('btn-del-confirm');
+  btn.disabled=true;btn.textContent='Verifying…';
+  try{
+    await api('POST','/auth/verify-password',{password:pw});
+  }catch(e){
+    document.getElementById('del-error').textContent=e.message||'Incorrect password.';
+    btn.disabled=false;btn.textContent='Delete';return;
+  }
+  closeDeleteModal();
+  const type=_delType,id=_delId;
   const path=type==='movie'?`/movies/${id}`:type==='webseries'?`/webseries/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
   await api('DELETE',path);
   if(type==='movie'){allMovies=allMovies.filter(m=>m._id!==id);renderMovies();}
