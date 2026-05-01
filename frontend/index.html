@@ -1400,9 +1400,9 @@ async function submitDeletePassword(){
   const btn=document.getElementById('btn-del-confirm');
   btn.disabled=true;btn.textContent='Verifying…';
   try{
-    await api('POST','/auth/verify-password',{password:pw});
+    await api('POST','/auth/login',{email:currentUser.email,password:pw});
   }catch(e){
-    document.getElementById('del-error').textContent=e.message||'Incorrect password.';
+    document.getElementById('del-error').textContent='Incorrect password.';
     btn.disabled=false;btn.textContent='Delete';return;
   }
   closeDeleteModal();
