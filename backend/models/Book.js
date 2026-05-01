@@ -7,7 +7,8 @@ const bookSchema = new mongoose.Schema({
   status: { type: String, enum: ['Reading','Completed','Paused','Want to Read'], default: 'Reading' },
   pages:  { type: Number },
   rating: { type: Number, min: 0, max: 5, default: 0 },
-  notes:  { type: String, default: '' }
+  notes:      { type: String, default: '' },
+  favorited:  { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Book', bookSchema);

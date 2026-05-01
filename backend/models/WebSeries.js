@@ -8,7 +8,8 @@ const webSeriesSchema = new mongoose.Schema({
   seasons:   { type: Number },
   status:    { type: String, enum: ['Watching','Completed','Paused','Want to Watch'], default: 'Watching' },
   rating:    { type: Number, min: 0, max: 5, default: 0 },
-  notes:     { type: String, default: '' }
+  notes:     { type: String, default: '' },
+  favorited: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('WebSeries', webSeriesSchema);

@@ -12,16 +12,24 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
   try {
-    const entry = await Diary.create({ content: req.body.content, userId: req.userId });
+    const entry = await Diary.create({
+      content: req.body.content,
+      mood:    req.body.mood || '',
+      userId:  req.userId
+    });
     res.status(201).json(entry);
   } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
 router.put('/:id', auth, async (req, res) => {
   try {
+    const update = {};
+    if (req.body.content   !== undefined) update.content   = req.body.content;
+    if (req.body.mood      !== undefined) update.mood      = req.body.mood;
+    if (req.body.favorited !== undefined) update.favorited = req.body.favorited;
     const entry = await Diary.findOneAndUpdate(
       { _id: req.params.id, userId: req.userId },
-      { content: req.body.content }, { new: true }
+      update, { new: true }
     );
     if (!entry) return res.status(404).json({ message: 'Not found' });
     res.json(entry);

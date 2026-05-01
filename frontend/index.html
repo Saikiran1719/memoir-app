@@ -1,259 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){var t=localStorage.getItem('memoir_theme')||'light';document.documentElement.setAttribute('data-theme',t);}());</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Memoir — Your Personal Vault</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --ink: #16120e;
-  --ink2: #2a2218;
-  --paper: #fefcf8;
-  --aged: #f5efe0;
-  --aged2: #ede4cc;
-  --sepia: #b8924a;
-  --sepia2: #d4a85a;
-  --rust: #a8390f;
-  --rust2: #c44a18;
-  --moss: #3d5c35;
-  --moss2: #4e7444;
-  --violet: #5b4fcf;
-  --violet2: #7c6fdb;
-  --muted: #7a6e5f;
-  --muted2: #9d9082;
-  --line: rgba(184,146,74,0.2);
-  --line2: rgba(184,146,74,0.12);
-  --shadow-sm: 0 1px 4px rgba(22,18,14,0.08);
-  --shadow-md: 0 4px 16px rgba(22,18,14,0.1);
-  --shadow-lg: 0 12px 40px rgba(22,18,14,0.14);
-  --shadow-xl: 0 24px 64px rgba(22,18,14,0.18);
-  --radius: 6px;
-  --radius-sm: 3px;
+:root{
+  --ink:#16120e;--ink2:#2a2218;
+  --paper:#fefcf8;--aged:#f5efe0;--aged2:#ede4cc;
+  --sepia:#b8924a;--sepia2:#d4a85a;
+  --rust:#a8390f;--rust2:#c44a18;
+  --moss:#3d5c35;--moss2:#4e7444;
+  --violet:#5b4fcf;--violet2:#7c6fdb;
+  --muted:#7a6e5f;--muted2:#9d9082;
+  --line:rgba(184,146,74,0.2);--line2:rgba(184,146,74,0.12);
+  --shadow-sm:0 1px 4px rgba(22,18,14,0.08);
+  --shadow-md:0 4px 16px rgba(22,18,14,0.1);
+  --shadow-lg:0 12px 40px rgba(22,18,14,0.14);
+  --shadow-xl:0 24px 64px rgba(22,18,14,0.18);
+  --radius:8px;--radius-sm:4px;--sb:#16120e;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', sans-serif; background: var(--aged); color: var(--ink); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+[data-theme="dark"]{
+  --ink:#ede8df;--ink2:#c9c2b6;
+  --paper:#1e1a16;--aged:#261f18;--aged2:#2e2720;
+  --muted:#8a8070;--muted2:#6e6458;
+  --line:rgba(184,146,74,0.18);--line2:rgba(184,146,74,0.1);
+  --shadow-sm:0 1px 4px rgba(0,0,0,0.3);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.42);
+  --shadow-xl:0 24px 64px rgba(0,0,0,0.52);
+  --sb:#110d09;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--aged);color:var(--ink);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 
-/* AUTH */
-#auth-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--ink); z-index: 500; transition: opacity 0.7s; overflow: hidden; }
-#auth-screen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(184,146,74,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(168,57,15,0.08) 0%, transparent 60%); }
-#auth-screen.hidden { opacity: 0; pointer-events: none; }
-.auth-layout { display: grid; grid-template-columns: 1fr 1fr; width: min(900px,96vw); min-height: 560px; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-xl); position: relative; }
-.auth-left { background: linear-gradient(160deg,#1e1812 0%,#2a2015 50%,#1a160f 100%); padding: 52px 44px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
-.auth-left::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle,rgba(184,146,74,0.15) 0%,transparent 70%); }
-.auth-left::after { content: ''; position: absolute; bottom: -40px; left: -40px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle,rgba(168,57,15,0.12) 0%,transparent 70%); }
-.auth-brand { position: relative; z-index: 1; }
-.auth-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 700; line-height: 1; color: var(--paper); }
-.auth-brand-name em { color: var(--sepia2); font-style: italic; }
-.auth-brand-tag { font-size: 0.7rem; color: rgba(255,255,255,0.35); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 8px; }
-.auth-quote { position: relative; z-index: 1; font-family: 'Cormorant Garamond',serif; font-size: 1.15rem; font-style: italic; color: rgba(255,255,255,0.45); line-height: 1.7; }
-.auth-features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; }
-.auth-feature { display: flex; align-items: center; gap: 10px; }
-.auth-feature-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sepia); flex-shrink: 0; }
-.auth-feature span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
-.auth-right { background: var(--paper); padding: 48px 44px; display: flex; flex-direction: column; justify-content: center; }
-.auth-right-title { font-family: 'Cormorant Garamond',serif; font-size: 1.8rem; font-weight: 600; margin-bottom: 4px; }
-.auth-right-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 32px; }
-.auth-tabs { display: flex; background: var(--aged); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 28px; }
-.auth-tab { flex: 1; padding: 8px; font-family: 'Inter',sans-serif; font-size: 0.8rem; font-weight: 500; background: none; border: none; color: var(--muted); cursor: pointer; border-radius: 3px; transition: all 0.2s; }
-.auth-tab.active { background: white; color: var(--ink); box-shadow: var(--shadow-sm); }
-.field-group { margin-bottom: 16px; }
-.field-group label { display: block; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
-.field-group input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--line2); background: var(--aged); border-radius: var(--radius-sm); font-family: 'Inter',sans-serif; font-size: 0.88rem; color: var(--ink); outline: none; transition: all 0.2s; }
-.field-group input:focus { border-color: var(--sepia); background: white; box-shadow: 0 0 0 3px rgba(184,146,74,0.1); }
-.btn-primary { width: 100%; padding: 12px; background: linear-gradient(135deg,var(--ink2) 0%,var(--ink) 100%); color: var(--paper); border: none; border-radius: var(--radius-sm); font-family: 'Inter',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22,18,14,0.3); }
-.auth-msg { font-size: 0.78rem; color: var(--rust); margin-top: 10px; min-height: 18px; text-align: center; }
-.auth-msg.success { color: var(--moss2); }
+/* ── AUTH ── */
+#auth-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ink);z-index:500;transition:opacity .7s;overflow:hidden}
+#auth-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(184,146,74,.12) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 20% 80%,rgba(168,57,15,.08) 0%,transparent 60%)}
+#auth-screen.hidden{opacity:0;pointer-events:none}
+.auth-layout{display:grid;grid-template-columns:1fr 1fr;width:min(900px,96vw);min-height:560px;border-radius:14px;overflow:hidden;box-shadow:var(--shadow-xl);position:relative}
+.auth-left{background:linear-gradient(160deg,#1e1812 0%,#2a2015 50%,#1a160f 100%);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.auth-left::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(184,146,74,.15) 0%,transparent 70%)}
+.auth-left::after{content:'';position:absolute;bottom:-40px;left:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(168,57,15,.12) 0%,transparent 70%)}
+.auth-brand{position:relative;z-index:1}
+.auth-brand-name{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;line-height:1;color:var(--paper)}
+.auth-brand-name em{color:var(--sepia2);font-style:italic}
+.auth-brand-tag{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
+.auth-quote{position:relative;z-index:1;font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:rgba(255,255,255,.45);line-height:1.7}
+.auth-features{position:relative;z-index:1;display:flex;flex-direction:column;gap:10px}
+.auth-feature{display:flex;align-items:center;gap:10px}
+.auth-feature-dot{width:6px;height:6px;border-radius:50%;background:var(--sepia);flex-shrink:0}
+.auth-feature span{font-size:.78rem;color:rgba(255,255,255,.45)}
+.auth-right{background:var(--paper);padding:48px 44px;display:flex;flex-direction:column;justify-content:center;transition:background .3s}
+.auth-right-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;margin-bottom:4px}
+.auth-right-sub{font-size:.8rem;color:var(--muted);margin-bottom:32px}
+.auth-tabs{display:flex;background:var(--aged);border-radius:var(--radius-sm);padding:3px;margin-bottom:28px}
+.auth-tab{flex:1;padding:8px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;background:none;border:none;color:var(--muted);cursor:pointer;border-radius:3px;transition:all .2s}
+.auth-tab.active{background:var(--paper);color:var(--ink);box-shadow:var(--shadow-sm)}
+.field-group{margin-bottom:16px}
+.field-group label{display:block;font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+.field-group input{width:100%;padding:11px 14px;border:1.5px solid var(--line2);background:var(--aged);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.88rem;color:var(--ink);outline:none;transition:all .2s}
+.field-group input:focus{border-color:var(--sepia);background:var(--paper);box-shadow:0 0 0 3px rgba(184,146,74,.1)}
+.btn-primary{width:100%;padding:12px;background:linear-gradient(135deg,var(--ink2) 0%,var(--ink) 100%);color:var(--paper);border:none;border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,18,14,.3)}
+.auth-msg{font-size:.78rem;color:var(--rust);margin-top:10px;min-height:18px;text-align:center}
+.auth-msg.success{color:var(--moss2)}
 @media(max-width:640px){.auth-layout{grid-template-columns:1fr}.auth-left{display:none}.auth-right{padding:40px 28px}}
 
-/* APP */
-#app { display: none; min-height: 100vh; }
-#app.visible { display: flex; }
+/* ── APP ── */
+#app{display:none;min-height:100vh}
+#app.visible{display:flex}
 
-/* SIDEBAR */
-.sidebar { width: 252px; min-height: 100vh; background: var(--ink); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 50; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); border-right: 1px solid rgba(255,255,255,0.04); }
-.sidebar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg,transparent,var(--sepia),transparent); opacity: 0.4; }
-.sidebar-logo { padding: 28px 24px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-.sidebar-logo h1 { font-family: 'Cormorant Garamond',serif; font-size: 1.8rem; color: var(--paper); font-weight: 700; line-height: 1; }
-.sidebar-logo h1 em { color: var(--sepia2); font-style: italic; }
-.sidebar-logo p { font-size: 0.65rem; color: rgba(255,255,255,0.25); margin-top: 4px; letter-spacing: 0.14em; text-transform: uppercase; }
-.sidebar-user { padding: 14px; margin: 10px 12px; background: rgba(255,255,255,0.04); border-radius: var(--radius); display: flex; align-items: center; gap: 11px; }
-.user-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,var(--rust) 0%,var(--sepia) 100%); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond',serif; font-size: 1.1rem; color: white; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 8px rgba(168,57,15,0.4); }
-.user-name { font-size: 0.82rem; color: var(--paper); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.user-email { font-size: 0.68rem; color: rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
-nav { flex: 1; padding: 8px 12px 0; }
-.nav-section { padding: 14px 12px 6px; font-size: 0.6rem; color: rgba(255,255,255,0.2); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: rgba(255,255,255,0.45); cursor: pointer; font-size: 0.82rem; font-weight: 500; transition: all 0.18s; border-radius: var(--radius); margin-bottom: 2px; position: relative; }
-.nav-item:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.06); }
-.nav-item.active { color: var(--paper); background: rgba(184,146,74,0.12); }
-.nav-item.active::before { content: ''; position: absolute; left: 0; top: 25%; bottom: 25%; width: 3px; background: var(--sepia2); border-radius: 0 2px 2px 0; }
-.nav-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; background: rgba(255,255,255,0.04); flex-shrink: 0; transition: background 0.18s; }
-.nav-item.active .nav-icon { background: rgba(184,146,74,0.15); }
-.nav-count { margin-left: auto; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 10px; min-width: 22px; text-align: center; }
-.nav-item.active .nav-count { background: rgba(184,146,74,0.2); color: var(--sepia2); }
-.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.06); }
-.btn-logout { width: 100%; padding: 9px 14px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 8px; }
-.btn-logout:hover { background: rgba(168,57,15,0.15); color: #e8907a; border-color: rgba(168,57,15,0.3); }
-.hamburger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; background: var(--ink); border: 1px solid rgba(255,255,255,0.08); width: 42px; height: 42px; border-radius: var(--radius); flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; box-shadow: var(--shadow-md); flex-shrink: 0; }
-.hamburger span { display: block; width: 18px; height: 1.5px; background: rgba(255,255,255,0.7); border-radius: 2px; }
-.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 40; backdrop-filter: blur(2px); }
+/* ── SIDEBAR ── */
+.sidebar{width:256px;min-height:100vh;background:var(--sb);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:50;transition:transform .3s cubic-bezier(.4,0,.2,1),background .3s;border-right:1px solid rgba(255,255,255,.04)}
+.sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--sepia),transparent);opacity:.35}
+.sidebar-logo{padding:26px 22px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-logo h1{font-family:'Cormorant Garamond',serif;font-size:1.85rem;color:var(--paper);font-weight:700;line-height:1}
+.sidebar-logo h1 em{color:var(--sepia2);font-style:italic}
+.sidebar-logo p{font-size:.62rem;color:rgba(255,255,255,.22);margin-top:4px;letter-spacing:.16em;text-transform:uppercase}
+.sidebar-user{padding:12px 14px;margin:10px 12px;background:rgba(255,255,255,.05);border-radius:10px;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px}
+.user-avatar{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--rust) 0%,var(--sepia) 100%);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:white;font-weight:700;flex-shrink:0;box-shadow:0 2px 8px rgba(168,57,15,.4)}
+.user-name{font-size:.82rem;color:var(--paper);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-email{font-size:.66rem;color:rgba(255,255,255,.28);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+nav{flex:1;padding:8px 12px 0;overflow-y:auto}
+.nav-section{padding:14px 12px 6px;font-size:.58rem;color:rgba(255,255,255,.18);letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;color:rgba(255,255,255,.42);cursor:pointer;font-size:.81rem;font-weight:500;transition:all .18s;border-radius:var(--radius);margin-bottom:1px;position:relative}
+.nav-item:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.06)}
+.nav-item.active{color:var(--paper);background:rgba(184,146,74,.12)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;background:var(--sepia2);border-radius:0 2px 2px 0}
+.nav-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;background:rgba(255,255,255,.04);flex-shrink:0;transition:background .18s}
+.nav-item.active .nav-icon{background:rgba(184,146,74,.16)}
+.nav-item:hover .nav-icon{background:rgba(255,255,255,.08)}
+.nav-count{margin-left:auto;background:rgba(255,255,255,.07);color:rgba(255,255,255,.35);font-size:.63rem;font-weight:600;padding:2px 7px;border-radius:10px;min-width:22px;text-align:center}
+.nav-item.active .nav-count{background:rgba(184,146,74,.2);color:var(--sepia2)}
+.sidebar-footer{padding:14px 12px 18px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:7px}
+.btn-theme{width:100%;padding:9px 14px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:8px}
+.btn-theme:hover{background:rgba(184,146,74,.12);color:var(--sepia2);border-color:rgba(184,146,74,.25)}
+.btn-logout{width:100%;padding:9px 14px;background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:8px}
+.btn-logout:hover{background:rgba(168,57,15,.15);color:#e8907a;border-color:rgba(168,57,15,.3)}
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--sb);border:1px solid rgba(255,255,255,.1);width:42px;height:42px;border-radius:var(--radius);flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;box-shadow:var(--shadow-md);flex-shrink:0}
+.hamburger span{display:block;width:18px;height:1.5px;background:rgba(255,255,255,.7);border-radius:2px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:40;backdrop-filter:blur(3px)}
 
-/* MAIN */
-.main { margin-left: 252px; flex: 1; min-height: 100vh; padding: 40px 44px; }
-.page { display: none; animation: fadeUp 0.35s cubic-bezier(0.4,0,0.2,1); }
-.page.active { display: block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+/* ── MAIN ── */
+.main{margin-left:256px;flex:1;min-height:100vh;padding:40px 44px}
+.page{display:none;animation:fadeUp .32s cubic-bezier(.4,0,.2,1)}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* PAGE HEADER */
-.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 32px; gap: 16px; flex-wrap: wrap; }
-.page-header h2 { font-family: 'Cormorant Garamond',serif; font-size: 2.6rem; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; }
-.page-header p { font-size: 0.82rem; color: var(--muted2); margin-top: 4px; }
-.btn-add { padding: 11px 22px; background: linear-gradient(135deg,var(--rust2) 0%,var(--rust) 100%); color: white; border: none; border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(168,57,15,0.3); }
-.btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,57,15,0.4); }
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px;flex-wrap:wrap}
+.page-header h2{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:700;line-height:1.05;letter-spacing:-.02em}
+.page-header p{font-size:.82rem;color:var(--muted2);margin-top:4px}
+.btn-add{padding:11px 22px;background:linear-gradient(135deg,var(--rust2) 0%,var(--rust) 100%);color:white;border:none;border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:8px;box-shadow:0 2px 10px rgba(168,57,15,.3)}
+.btn-add:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(168,57,15,.45)}
 
-/* DASHBOARD */
-.welcome-bar { margin-bottom: 32px; }
-.welcome-bar h2 { font-family: 'Cormorant Garamond',serif; font-size: 2.4rem; font-weight: 600; letter-spacing: -0.02em; }
-.welcome-bar p { font-size: 0.83rem; color: var(--muted2); margin-top: 4px; }
-.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 40px; }
-.stat-card { background: var(--paper); border-radius: var(--radius); padding: 24px 22px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
-.stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
-.stat-card.movies::after  { background: linear-gradient(90deg,var(--rust),var(--rust2)); }
-.stat-card.series::after  { background: linear-gradient(90deg,var(--violet),var(--violet2)); }
-.stat-card.books::after   { background: linear-gradient(90deg,var(--moss),var(--moss2)); }
-.stat-card.diary::after   { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
-.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 16px; }
-.stat-card.movies .stat-icon { background: rgba(168,57,15,0.08); }
-.stat-card.series .stat-icon { background: rgba(91,79,207,0.08); }
-.stat-card.books  .stat-icon { background: rgba(61,92,53,0.08); }
-.stat-card.diary  .stat-icon { background: rgba(184,146,74,0.1); }
-.stat-num { font-family: 'Cormorant Garamond',serif; font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 3px; }
-.stat-card.movies .stat-num { color: var(--rust); }
-.stat-card.series .stat-num { color: var(--violet); }
-.stat-card.books  .stat-num { color: var(--moss); }
-.stat-card.diary  .stat-num { color: var(--sepia); }
-.stat-label { font-size: 0.72rem; color: var(--muted2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
-.stat-sub { font-size: 0.72rem; color: var(--muted2); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line2); }
-.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-.section-title { font-family: 'Cormorant Garamond',serif; font-size: 1.4rem; font-weight: 600; }
+/* ── DASHBOARD ── */
+.welcome-bar{margin-bottom:30px}
+.welcome-bar h2{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;letter-spacing:-.02em}
+.welcome-bar p{font-size:.83rem;color:var(--muted2);margin-top:4px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px}
+.stat-card{background:var(--paper);border-radius:12px;padding:22px 20px;box-shadow:var(--shadow-sm);border:1px solid rgba(255,255,255,.8);cursor:pointer;transition:all .28s;position:relative;overflow:hidden}
+[data-theme="dark"] .stat-card{border-color:rgba(255,255,255,.06)}
+.stat-glow{position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;opacity:.06;transition:transform .4s,opacity .4s;pointer-events:none}
+.stat-card:hover .stat-glow{transform:scale(1.3);opacity:.12}
+.stat-card.movies .stat-glow{background:var(--rust)}
+.stat-card.series .stat-glow{background:var(--violet)}
+.stat-card.books  .stat-glow{background:var(--moss)}
+.stat-card.diary  .stat-glow{background:var(--sepia)}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 12px 12px}
+.stat-card.movies::after{background:linear-gradient(90deg,var(--rust),var(--rust2))}
+.stat-card.series::after{background:linear-gradient(90deg,var(--violet),var(--violet2))}
+.stat-card.books::after{background:linear-gradient(90deg,var(--moss),var(--moss2))}
+.stat-card.diary::after{background:linear-gradient(90deg,var(--sepia),var(--sepia2))}
+.stat-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:16px;position:relative;z-index:1}
+.stat-card.movies .stat-icon{background:rgba(168,57,15,.1)}
+.stat-card.series .stat-icon{background:rgba(91,79,207,.1)}
+.stat-card.books  .stat-icon{background:rgba(61,92,53,.1)}
+.stat-card.diary  .stat-icon{background:rgba(184,146,74,.12)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:700;line-height:1;margin-bottom:3px;position:relative;z-index:1}
+.stat-card.movies .stat-num{color:var(--rust)}
+.stat-card.series .stat-num{color:var(--violet)}
+.stat-card.books  .stat-num{color:var(--moss)}
+.stat-card.diary  .stat-num{color:var(--sepia)}
+.stat-label{font-size:.7rem;color:var(--muted2);font-weight:600;text-transform:uppercase;letter-spacing:.08em;position:relative;z-index:1}
+.stat-sub{font-size:.72rem;color:var(--muted2);margin-top:10px;padding-top:10px;border-top:1px solid var(--line2);position:relative;z-index:1}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600}
 
-/* CARDS */
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(270px,1fr)); gap: 18px; }
-.entry-card { background: var(--paper); border-radius: var(--radius); padding: 0; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.9); transition: all 0.25s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; display: flex; flex-direction: column; }
-.entry-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.card-accent { height: 4px; }
-.entry-card.movie        .card-accent { background: linear-gradient(90deg,var(--rust),#e05a2a); }
-.entry-card.book         .card-accent { background: linear-gradient(90deg,var(--moss),#62904f); }
-.entry-card.series-entry .card-accent { background: linear-gradient(90deg,var(--violet),var(--violet2)); }
-.entry-card.diary-entry  .card-accent { background: linear-gradient(90deg,var(--sepia),var(--sepia2)); }
-.card-body { padding: 18px 20px 14px; flex: 1; display: flex; flex-direction: column; }
-.card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; gap: 8px; }
-.card-title { font-family: 'Cormorant Garamond',serif; font-size: 1.15rem; font-weight: 700; line-height: 1.3; flex: 1; }
-.card-actions { display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
-.entry-card:hover .card-actions { opacity: 1; }
-.btn-icon { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--line); background: var(--aged); cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; color: var(--muted); }
-.btn-icon:hover { background: var(--rust); color: white; border-color: var(--rust); }
-.btn-icon.edit:hover { background: var(--sepia); border-color: var(--sepia); color: white; }
-.card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-.tag { padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
-.tag.genre    { background: rgba(168,57,15,0.08); color: var(--rust); border: 1px solid rgba(168,57,15,0.15); }
-.tag.year     { background: rgba(122,110,95,0.08); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
-.tag.platform { background: rgba(91,79,207,0.08); color: var(--violet); border: 1px solid rgba(91,79,207,0.15); }
-.tag.status-reading        { background: rgba(184,146,74,0.12); color: #7a5e2a; border: 1px solid rgba(184,146,74,0.2); }
-.tag.status-watching       { background: rgba(91,79,207,0.1); color: var(--violet); border: 1px solid rgba(91,79,207,0.18); }
-.tag.status-completed      { background: rgba(61,92,53,0.1); color: var(--moss); border: 1px solid rgba(61,92,53,0.18); }
-.tag.status-paused         { background: rgba(122,110,95,0.1); color: var(--muted); border: 1px solid rgba(122,110,95,0.15); }
-.tag.status-want-to-read   { background: rgba(22,18,14,0.06); color: var(--ink2); border: 1px solid rgba(22,18,14,0.1); }
-.tag.status-want-to-watch  { background: rgba(22,18,14,0.06); color: var(--ink2); border: 1px solid rgba(22,18,14,0.1); }
-.stars { display: flex; gap: 2px; margin-bottom: 8px; }
-.star { font-size: 0.78rem; }
-.star.filled { color: var(--sepia2); }
-.star.empty  { color: rgba(184,146,74,0.2); }
-.card-note { font-size: 0.8rem; color: var(--muted); line-height: 1.6; font-style: italic; }
-.card-footer { padding: 10px 20px 14px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--line2); margin-top: 12px; }
-.card-date   { font-size: 0.68rem; color: var(--muted2); font-weight: 500; }
-.card-author { font-size: 0.72rem; color: var(--muted); }
-.empty-state { text-align: center; padding: 72px 20px; color: var(--muted2); }
-.empty-icon  { font-size: 3.5rem; margin-bottom: 14px; opacity: 0.35; line-height: 1; }
-.empty-title { font-family: 'Cormorant Garamond',serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
-.empty-sub   { font-size: 0.82rem; }
+/* ── CARDS ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.entry-card{background:var(--paper);border-radius:10px;box-shadow:var(--shadow-sm);border:1px solid rgba(255,255,255,.9);transition:all .28s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;display:flex;flex-direction:column;animation:fadeUp .35s cubic-bezier(.4,0,.2,1) both}
+[data-theme="dark"] .entry-card{border-color:rgba(255,255,255,.06)}
+.entry-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
 
-/* TOOLBAR */
-.toolbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-.search-wrap { flex: 1; min-width: 200px; position: relative; }
-.search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; opacity: 0.35; pointer-events: none; }
-.search-box { width: 100%; padding: 10px 14px 10px 34px; border: 1.5px solid var(--line); background: var(--paper); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.84rem; color: var(--ink); outline: none; transition: all 0.2s; }
-.search-box:focus { border-color: var(--sepia); box-shadow: 0 0 0 3px rgba(184,146,74,0.1); }
-.filter-select { padding: 10px 14px; border: 1.5px solid var(--line); background: var(--paper); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.84rem; color: var(--ink); outline: none; cursor: pointer; transition: border-color 0.2s; }
-.filter-select:focus { border-color: var(--sepia); }
+/* card cover */
+.card-cover{height:84px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:10px 14px 11px}
+.cover-row{display:flex;justify-content:space-between;align-items:flex-start}
+.cover-emoji{font-size:1.4rem;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))}
+.cover-actions{display:flex;gap:4px;opacity:0;transition:opacity .2s}
+.entry-card:hover .cover-actions{opacity:1}
+.btn-cov{width:26px;height:26px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.28);backdrop-filter:blur(4px);cursor:pointer;font-size:.72rem;display:flex;align-items:center;justify-content:center;transition:all .15s;color:rgba(255,255,255,.85);line-height:1}
+.btn-cov:hover{background:rgba(0,0,0,.55);border-color:rgba(255,255,255,.5);color:white}
+.btn-cov.fav-on{color:#ff4444!important}
+.cover-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:rgba(255,255,255,.96);line-height:1.3;text-shadow:0 1px 4px rgba(0,0,0,.4);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-/* DIARY */
-.diary-list { display: flex; flex-direction: column; gap: 14px; }
-.diary-card { background: var(--paper); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.9); transition: all 0.25s; position: relative; }
-.diary-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.diary-card-inner { display: flex; }
-.diary-sidebar-strip { width: 4px; background: linear-gradient(180deg,var(--sepia) 0%,var(--sepia2) 100%); flex-shrink: 0; }
-.diary-card-content { padding: 20px 24px; flex: 1; position: relative; }
-.diary-actions { position: absolute; top: 14px; right: 16px; display: flex; gap: 5px; opacity: 0; transition: opacity 0.2s; }
-.diary-card:hover .diary-actions { opacity: 1; }
-.diary-date-badge { display: inline-block; font-size: 0.68rem; color: var(--muted2); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: var(--aged); padding: 3px 9px; border-radius: 20px; border: 1px solid var(--line2); margin-bottom: 12px; }
-.diary-content { font-family: 'Cormorant Garamond',serif; font-size: 1.02rem; line-height: 1.85; color: var(--ink); font-style: italic; white-space: pre-wrap; }
+/* default cover gradients */
+.entry-card.movie        .card-cover{background:linear-gradient(135deg,#7a2b0a 0%,#c44a18 100%)}
+.entry-card.book         .card-cover{background:linear-gradient(135deg,#2d4426 0%,#4e7444 100%)}
+.entry-card.series-entry .card-cover{background:linear-gradient(135deg,#3d3498 0%,#7c6fdb 100%)}
+.entry-card.diary-entry  .card-cover{background:linear-gradient(135deg,#8a6928 0%,#d4a85a 100%)}
 
-/* MODAL */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(22,18,14,0.7); z-index: 300; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-.modal-overlay.open { display: flex; }
-.modal { background: var(--paper); width: min(540px,95vw); border-radius: 10px; padding: 0; box-shadow: var(--shadow-xl); position: relative; max-height: 92vh; overflow-y: auto; animation: modalIn 0.28s cubic-bezier(0.34,1.56,0.64,1); border: 1px solid rgba(255,255,255,0.9); }
-@keyframes modalIn { from{opacity:0;transform:scale(0.94) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
-.modal-accent { height: 3px; background: linear-gradient(90deg,var(--rust),var(--sepia),var(--moss)); border-radius: 10px 10px 0 0; }
-.modal-header { padding: 24px 32px 20px; border-bottom: 1px solid var(--line2); position: relative; }
-.modal-title { font-family: 'Cormorant Garamond',serif; font-size: 1.6rem; font-weight: 700; }
-.modal-subtitle { font-size: 0.78rem; color: var(--muted2); margin-top: 3px; }
-.modal-close { position: absolute; top: 18px; right: 20px; background: var(--aged); border: 1px solid var(--line); font-size: 0.85rem; cursor: pointer; color: var(--muted); transition: all 0.15s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
-.modal-close:hover { background: var(--rust); color: white; border-color: var(--rust); }
-.modal-body { padding: 24px 32px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-field { margin-bottom: 18px; }
-.form-field label { display: block; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 7px; font-weight: 600; }
-.form-field input, .form-field select, .form-field textarea { width: 100%; padding: 10px 13px; border: 1.5px solid var(--line); background: var(--aged); border-radius: var(--radius-sm); font-family: 'Inter',sans-serif; font-size: 0.86rem; color: var(--ink); outline: none; transition: all 0.2s; }
-.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--sepia); background: white; box-shadow: 0 0 0 3px rgba(184,146,74,0.08); }
-.form-field textarea { resize: vertical; min-height: 100px; line-height: 1.65; font-family: 'Cormorant Garamond',serif; font-size: 1rem; font-style: italic; }
-.star-rating { display: flex; gap: 4px; margin-top: 4px; }
-.star-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(184,146,74,0.2); transition: all 0.15s; line-height: 1; }
-.star-btn.active { color: var(--sepia2); }
-.star-btn:hover { transform: scale(1.25); color: var(--sepia2); }
-.modal-footer { padding: 18px 32px 24px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid var(--line2); }
-.btn-secondary { padding: 10px 20px; background: none; color: var(--muted); border: 1.5px solid var(--line); border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-.btn-secondary:hover { border-color: var(--muted2); color: var(--ink); }
-.btn-save { padding: 10px 28px; background: linear-gradient(135deg,var(--rust2) 0%,var(--rust) 100%); color: white; border: none; border-radius: var(--radius); font-family: 'Inter',sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(168,57,15,0.25); }
-.btn-save:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(168,57,15,0.35); }
-.btn-save:disabled { background: var(--muted2); box-shadow: none; cursor: not-allowed; transform: none; }
-.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; }
-@keyframes spin { to{transform:rotate(360deg)} }
+.card-body{padding:14px 16px 10px;flex:1;display:flex;flex-direction:column;gap:7px}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{padding:3px 9px;border-radius:20px;font-size:.67rem;font-weight:600}
+.tag.genre   {background:rgba(168,57,15,.08);color:var(--rust);border:1px solid rgba(168,57,15,.15)}
+.tag.year    {background:rgba(122,110,95,.08);color:var(--muted);border:1px solid rgba(122,110,95,.15)}
+.tag.seasons {background:rgba(122,110,95,.08);color:var(--muted);border:1px solid rgba(122,110,95,.15)}
+.tag.status-reading       {background:rgba(184,146,74,.12);color:#7a5e2a;border:1px solid rgba(184,146,74,.2)}
+.tag.status-watching      {background:rgba(91,79,207,.1);color:var(--violet);border:1px solid rgba(91,79,207,.18)}
+.tag.status-completed     {background:rgba(61,92,53,.1);color:var(--moss);border:1px solid rgba(61,92,53,.18)}
+.tag.status-paused        {background:rgba(122,110,95,.1);color:var(--muted);border:1px solid rgba(122,110,95,.15)}
+.tag.status-want-to-read  {background:rgba(22,18,14,.06);color:var(--ink2);border:1px solid rgba(22,18,14,.1)}
+.tag.status-want-to-watch {background:rgba(22,18,14,.06);color:var(--ink2);border:1px solid rgba(22,18,14,.1)}
+/* platform brand badges */
+.tag.p-netflix  {background:rgba(229,9,20,.1);color:#e50914;border:1px solid rgba(229,9,20,.25)}
+.tag.p-amazon   {background:rgba(0,115,213,.1);color:#0073d5;border:1px solid rgba(0,115,213,.25)}
+.tag.p-disney   {background:rgba(0,99,229,.1);color:#0063e5;border:1px solid rgba(0,99,229,.25)}
+.tag.p-apple    {background:rgba(80,80,80,.08);color:var(--muted);border:1px solid rgba(80,80,80,.2)}
+.tag.p-hbo      {background:rgba(98,34,236,.1);color:#6222ec;border:1px solid rgba(98,34,236,.25)}
+.tag.p-hulu     {background:rgba(28,231,131,.1);color:#0d8a50;border:1px solid rgba(28,231,131,.25)}
+.tag.p-hotstar  {background:rgba(31,128,224,.1);color:#1f80e0;border:1px solid rgba(31,128,224,.25)}
+.tag.p-sonyliv  {background:rgba(231,28,36,.08);color:#c01820;border:1px solid rgba(231,28,36,.2)}
+.tag.p-zee5     {background:rgba(126,29,176,.1);color:#7e1db0;border:1px solid rgba(126,29,176,.2)}
+.tag.p-jio      {background:rgba(0,51,102,.1);color:#0044aa;border:1px solid rgba(0,51,102,.2)}
+.tag.p-aha      {background:rgba(214,45,32,.1);color:#d62d20;border:1px solid rgba(214,45,32,.2)}
+/* mood badges */
+.mood-badge{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid currentColor}
 
-/* TOAST */
-.toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 600; display: flex; flex-direction: column; gap: 8px; }
-.toast { background: var(--ink); color: var(--paper); padding: 12px 18px; border-radius: var(--radius); font-size: 0.82rem; font-weight: 500; box-shadow: var(--shadow-xl); animation: toastIn 0.35s cubic-bezier(0.34,1.4,0.64,1); border-left: 3px solid var(--sepia); max-width: 300px; display: flex; align-items: center; gap: 10px; }
-.toast.success { border-left-color: var(--moss2); }
-.toast.error   { border-left-color: var(--rust); }
-@keyframes toastIn { from{opacity:0;transform:translateX(24px) scale(0.95)} to{opacity:1;transform:translateX(0) scale(1)} }
+.stars{display:flex;gap:2px}
+.star{font-size:.76rem}
+.star.filled{color:var(--sepia2)}
+.star.empty{color:rgba(184,146,74,.2)}
+.card-note{font-size:.79rem;color:var(--muted);line-height:1.6;font-style:italic}
+.card-footer{padding:9px 16px 13px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line2);margin-top:auto}
+.card-date  {font-size:.67rem;color:var(--muted2);font-weight:500}
+.card-author{font-size:.71rem;color:var(--muted)}
+.empty-state{text-align:center;padding:72px 20px;color:var(--muted2)}
+.empty-icon {font-size:3.8rem;margin-bottom:16px;opacity:.3;line-height:1}
+.empty-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;margin-bottom:6px;color:var(--muted)}
+.empty-sub  {font-size:.82rem}
 
-/* RESPONSIVE */
+/* ── TOOLBAR ── */
+.toolbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap::before{content:'⌕';position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:1rem;opacity:.3;pointer-events:none;color:var(--ink)}
+.search-box{width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--line);background:var(--paper);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.84rem;color:var(--ink);outline:none;transition:all .2s}
+.search-box:focus{border-color:var(--sepia);box-shadow:0 0 0 3px rgba(184,146,74,.1)}
+.filter-select{padding:10px 14px;border:1.5px solid var(--line);background:var(--paper);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.84rem;color:var(--ink);outline:none;cursor:pointer;transition:border-color .2s}
+.filter-select:focus{border-color:var(--sepia)}
+.fav-toggle{padding:10px 14px;border:1.5px solid var(--line);background:var(--paper);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.82rem;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:5px;font-weight:500}
+.fav-toggle:hover{border-color:var(--rust2);color:var(--rust)}
+.fav-toggle.active{background:rgba(168,57,15,.08);border-color:rgba(168,57,15,.3);color:var(--rust);font-weight:600}
+
+/* ── DIARY ── */
+.diary-list{display:flex;flex-direction:column;gap:14px}
+.diary-card{background:var(--paper);border-radius:10px;overflow:hidden;box-shadow:var(--shadow-sm);border:1px solid rgba(255,255,255,.9);transition:all .25s;position:relative}
+[data-theme="dark"] .diary-card{border-color:rgba(255,255,255,.06)}
+.diary-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.diary-card-inner{display:flex}
+.diary-sidebar-strip{width:4px;background:linear-gradient(180deg,var(--sepia) 0%,var(--sepia2) 100%);flex-shrink:0}
+.diary-card-content{padding:20px 24px;flex:1;position:relative}
+.diary-actions{position:absolute;top:14px;right:16px;display:flex;gap:5px;opacity:0;transition:opacity .2s}
+.diary-card:hover .diary-actions{opacity:1}
+.btn-icon{width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:var(--aged);cursor:pointer;font-size:.72rem;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--muted)}
+.btn-icon:hover{background:var(--rust);color:white;border-color:var(--rust)}
+.btn-icon.edit:hover{background:var(--sepia);border-color:var(--sepia);color:white}
+.btn-icon.fav-on{color:#e01010!important;border-color:rgba(224,16,16,.3)!important}
+.diary-date-badge{display:inline-block;font-size:.67rem;color:var(--muted2);font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--aged);padding:3px 9px;border-radius:20px;border:1px solid var(--line2);margin-bottom:10px}
+.diary-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.diary-content{font-family:'Cormorant Garamond',serif;font-size:1.02rem;line-height:1.85;color:var(--ink);font-style:italic;white-space:pre-wrap}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(22,18,14,.72);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--paper);width:min(550px,95vw);border-radius:12px;padding:0;box-shadow:var(--shadow-xl);position:relative;max-height:92vh;overflow-y:auto;animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);border:1px solid rgba(255,255,255,.9)}
+[data-theme="dark"] .modal{border-color:rgba(255,255,255,.08)}
+@keyframes modalIn{from{opacity:0;transform:scale(.93) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-accent{height:4px;background:linear-gradient(90deg,var(--rust),var(--sepia),var(--moss));border-radius:12px 12px 0 0}
+.modal-header{padding:22px 30px 18px;border-bottom:1px solid var(--line2);position:relative}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:700}
+.modal-subtitle{font-size:.77rem;color:var(--muted2);margin-top:3px}
+.modal-close{position:absolute;top:18px;right:18px;background:var(--aged);border:1px solid var(--line);font-size:.82rem;cursor:pointer;color:var(--muted);transition:all .15s;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px}
+.modal-close:hover{background:var(--rust);color:white;border-color:var(--rust)}
+.modal-body{padding:22px 30px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-field{margin-bottom:16px}
+.form-field label{display:block;font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;font-weight:600}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:10px 13px;border:1.5px solid var(--line);background:var(--aged);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.86rem;color:var(--ink);outline:none;transition:all .2s}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--sepia);background:var(--paper);box-shadow:0 0 0 3px rgba(184,146,74,.08)}
+.form-field textarea{resize:vertical;min-height:100px;line-height:1.65;font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic}
+.star-rating{display:flex;gap:4px;margin-top:4px}
+.star-btn{background:none;border:none;font-size:1.6rem;cursor:pointer;color:rgba(184,146,74,.2);transition:all .15s;line-height:1}
+.star-btn.active{color:var(--sepia2)}
+.star-btn:hover{transform:scale(1.25);color:var(--sepia2)}
+/* mood picker */
+.mood-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mood-btn{padding:6px 12px;border:1.5px solid var(--line);background:var(--aged);border-radius:20px;font-size:.78rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;color:var(--muted);display:flex;align-items:center;gap:5px}
+.mood-btn:hover{border-color:var(--sepia);color:var(--ink)}
+.mood-btn.active{border-color:var(--sepia);background:rgba(184,146,74,.12);color:var(--ink);font-weight:600}
+.modal-footer{padding:16px 30px 22px;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--line2)}
+.btn-secondary{padding:10px 20px;background:none;color:var(--muted);border:1.5px solid var(--line);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--muted2);color:var(--ink)}
+.btn-save{padding:10px 28px;background:linear-gradient(135deg,var(--rust2) 0%,var(--rust) 100%);color:white;border:none;border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(168,57,15,.25)}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(168,57,15,.35)}
+.btn-save:disabled{background:var(--muted2);box-shadow:none;cursor:not-allowed;transform:none}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;bottom:28px;right:28px;z-index:600;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.toast{background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:var(--radius);font-size:.82rem;font-weight:500;box-shadow:var(--shadow-xl);animation:toastIn .35s cubic-bezier(.34,1.4,.64,1);border-left:3px solid var(--sepia);max-width:300px;display:flex;align-items:center;gap:10px}
+.toast.success{border-left-color:var(--moss2)}
+.toast.error  {border-left-color:var(--rust)}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px) scale(.95)}to{opacity:1;transform:translateX(0) scale(1)}}
+
+/* ── RESPONSIVE ── */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
-  .overlay{display:block;opacity:0;pointer-events:none;transition:opacity 0.3s}.overlay.open{opacity:1;pointer-events:all}
-  .hamburger{display:flex}
-  .sidebar-logo{padding-left:64px}
+  .overlay{display:block;opacity:0;pointer-events:none;transition:opacity .3s}.overlay.open{opacity:1;pointer-events:all}
+  .hamburger{display:flex}.sidebar-logo{padding-left:64px}
   .main{margin-left:0;padding:72px 20px 28px}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .form-row{grid-template-columns:1fr}.cards-grid{grid-template-columns:1fr}
-  .modal-body,.modal-footer,.modal-header{padding-left:22px;padding-right:22px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .form-row{grid-template-columns:1fr}
+  .cards-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .modal-body,.modal-footer,.modal-header{padding-left:20px;padding-right:20px}
 }
 @media(max-width:520px){
   .stats-grid{grid-template-columns:1fr 1fr}
   .page-header h2,.welcome-bar h2{font-size:1.9rem}
-  .stat-num{font-size:2rem}
+  .stat-num{font-size:2.4rem}
+  .cards-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -270,9 +320,9 @@ nav { flex: 1; padding: 8px 12px 0; }
       <div class="auth-quote">A life worth living is worth recording.</div>
       <div class="auth-features">
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Track every movie you've watched</span></div>
-        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Log your web series & shows</span></div>
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Log your web series &amp; shows</span></div>
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Log your reading journey</span></div>
-        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Keep a private diary</span></div>
+        <div class="auth-feature"><div class="auth-feature-dot"></div><span>Keep a private mood diary</span></div>
         <div class="auth-feature"><div class="auth-feature-dot"></div><span>Synced to MongoDB Atlas</span></div>
       </div>
     </div>
@@ -290,7 +340,7 @@ nav { flex: 1; padding: 8px 12px 0; }
         <div class="auth-msg" id="login-msg"></div>
       </div>
       <div id="signup-form" style="display:none">
-        <div class="field-group"><label>Full Name</label><input type="text" id="signup-name" placeholder="User Name"/></div>
+        <div class="field-group"><label>Full Name</label><input type="text" id="signup-name" placeholder="Your Name"/></div>
         <div class="field-group"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"/></div>
         <div class="field-group"><label>Password</label><input type="password" id="signup-password" placeholder="min. 6 characters"/></div>
         <button class="btn-primary" id="btn-signup" onclick="handleSignup()">Create Account →</button>
@@ -323,7 +373,10 @@ nav { flex: 1; padding: 8px 12px 0; }
       <div class="nav-section">Personal</div>
       <div class="nav-item" data-page="diary"     onclick="showPage('diary',this)">    <div class="nav-icon">✍️</div>Diary     <span class="nav-count" id="nc-diary">0</span></div>
     </nav>
-    <div class="sidebar-footer"><button class="btn-logout" onclick="handleLogout()">⟵ &nbsp;Sign Out</button></div>
+    <div class="sidebar-footer">
+      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()"><span id="theme-icon">◑</span><span id="theme-label">Dark Mode</span></button>
+      <button class="btn-logout" onclick="handleLogout()">⟵ &nbsp;Sign Out</button>
+    </div>
   </aside>
   <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
 
@@ -337,18 +390,22 @@ nav { flex: 1; padding: 8px 12px 0; }
       </div>
       <div class="stats-grid">
         <div class="stat-card movies" onclick="showPage('movies',document.querySelector('[data-page=movies]'))">
+          <div class="stat-glow"></div>
           <div class="stat-icon">🎬</div><div class="stat-num" id="stat-movies">0</div>
           <div class="stat-label">Movies Watched</div><div class="stat-sub" id="stat-movies-sub">Start tracking</div>
         </div>
         <div class="stat-card series" onclick="showPage('webseries',document.querySelector('[data-page=webseries]'))">
+          <div class="stat-glow"></div>
           <div class="stat-icon">📺</div><div class="stat-num" id="stat-series">0</div>
-          <div class="stat-label">Series Watched</div><div class="stat-sub" id="stat-series-sub">Start tracking</div>
+          <div class="stat-label">Series Tracked</div><div class="stat-sub" id="stat-series-sub">Start tracking</div>
         </div>
         <div class="stat-card books" onclick="showPage('books',document.querySelector('[data-page=books]'))">
+          <div class="stat-glow"></div>
           <div class="stat-icon">📚</div><div class="stat-num" id="stat-books">0</div>
           <div class="stat-label">Books Logged</div><div class="stat-sub" id="stat-books-sub">Start tracking</div>
         </div>
         <div class="stat-card diary" onclick="showPage('diary',document.querySelector('[data-page=diary]'))">
+          <div class="stat-glow"></div>
           <div class="stat-icon">✍️</div><div class="stat-num" id="stat-diary">0</div>
           <div class="stat-label">Diary Entries</div><div class="stat-sub" id="stat-diary-sub">Start writing</div>
         </div>
@@ -376,14 +433,20 @@ nav { flex: 1; padding: 8px 12px 0; }
           <option>History</option><option>Sport</option><option>Western</option><option>Superhero</option>
           <option>Anime</option>
           <optgroup label="── Combinations ──" disabled></optgroup>
-          <option>Thriller & Crime</option><option>War & Drama</option><option>Action & Adventure</option>
-          <option>Sci-Fi & Thriller</option><option>Romance & Drama</option><option>Comedy & Drama</option>
-          <option>Crime & Drama</option><option>Horror & Thriller</option><option>Fantasy & Adventure</option>
-          <option>Action & Comedy</option><option>Mystery & Thriller</option><option>Other</option>
+          <option>Thriller &amp; Crime</option><option>War &amp; Drama</option><option>Action &amp; Adventure</option>
+          <option>Sci-Fi &amp; Thriller</option><option>Romance &amp; Drama</option><option>Comedy &amp; Drama</option>
+          <option>Crime &amp; Drama</option><option>Horror &amp; Thriller</option><option>Fantasy &amp; Adventure</option>
+          <option>Action &amp; Comedy</option><option>Mystery &amp; Thriller</option><option>Other</option>
         </select>
         <select class="filter-select" id="movie-rating-filter" onchange="renderMovies()">
           <option value="">All Ratings</option><option value="5">★★★★★</option><option value="4">★★★★+</option><option value="3">★★★+</option>
         </select>
+        <select class="filter-select" id="movie-sort" onchange="renderMovies()">
+          <option value="date-desc">Newest First</option><option value="date-asc">Oldest First</option>
+          <option value="title-asc">A → Z</option><option value="title-desc">Z → A</option>
+          <option value="rating-desc">Highest Rated</option>
+        </select>
+        <button class="fav-toggle" id="fav-movies" onclick="toggleFavFilter('movies')">♥ Favorites</button>
       </div>
       <div class="cards-grid" id="movies-grid"></div>
     </div>
@@ -391,7 +454,7 @@ nav { flex: 1; padding: 8px 12px 0; }
     <!-- WEB SERIES -->
     <div class="page" id="page-webseries">
       <div class="page-header">
-        <div><h2>Web Series</h2><p>Shows & series you've watched</p></div>
+        <div><h2>Web Series</h2><p>Shows &amp; series you've watched</p></div>
         <button class="btn-add" onclick="openModal('webseries')">＋ Add Series</button>
       </div>
       <div class="toolbar">
@@ -407,6 +470,12 @@ nav { flex: 1; padding: 8px 12px 0; }
           <option value="">All Status</option>
           <option>Watching</option><option>Completed</option><option>Paused</option><option>Want to Watch</option>
         </select>
+        <select class="filter-select" id="series-sort" onchange="renderSeries()">
+          <option value="date-desc">Newest First</option><option value="date-asc">Oldest First</option>
+          <option value="title-asc">A → Z</option><option value="title-desc">Z → A</option>
+          <option value="rating-desc">Highest Rated</option>
+        </select>
+        <button class="fav-toggle" id="fav-series" onclick="toggleFavFilter('series')">♥ Favorites</button>
       </div>
       <div class="cards-grid" id="series-grid"></div>
     </div>
@@ -422,6 +491,12 @@ nav { flex: 1; padding: 8px 12px 0; }
         <select class="filter-select" id="book-status-filter" onchange="renderBooks()">
           <option value="">All Status</option><option>Reading</option><option>Completed</option><option>Paused</option><option>Want to Read</option>
         </select>
+        <select class="filter-select" id="book-sort" onchange="renderBooks()">
+          <option value="date-desc">Newest First</option><option value="date-asc">Oldest First</option>
+          <option value="title-asc">A → Z</option><option value="title-desc">Z → A</option>
+          <option value="rating-desc">Highest Rated</option>
+        </select>
+        <button class="fav-toggle" id="fav-books" onclick="toggleFavFilter('books')">♥ Favorites</button>
       </div>
       <div class="cards-grid" id="books-grid"></div>
     </div>
@@ -434,6 +509,17 @@ nav { flex: 1; padding: 8px 12px 0; }
       </div>
       <div class="toolbar">
         <div class="search-wrap"><input class="search-box" id="diary-search" placeholder="Search entries…" oninput="renderDiary()"/></div>
+        <select class="filter-select" id="diary-mood-filter" onchange="renderDiary()">
+          <option value="">All Moods</option>
+          <option value="happy">😊 Happy</option><option value="excited">🤩 Excited</option>
+          <option value="calm">😌 Calm</option><option value="reflective">🤔 Reflective</option>
+          <option value="sad">😔 Sad</option><option value="anxious">😰 Anxious</option>
+          <option value="frustrated">😤 Frustrated</option><option value="tired">😴 Tired</option>
+        </select>
+        <select class="filter-select" id="diary-sort" onchange="renderDiary()">
+          <option value="date-desc">Newest First</option><option value="date-asc">Oldest First</option>
+        </select>
+        <button class="fav-toggle" id="fav-diary" onclick="toggleFavFilter('diary')">♥ Favorites</button>
       </div>
       <div class="diary-list" id="diary-list"></div>
     </div>
@@ -460,14 +546,62 @@ nav { flex: 1; padding: 8px 12px 0; }
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-const API = 'https://memoir-app-9uhs.onrender.com/api';
+const API='https://memoir-app-9uhs.onrender.com/api';
 let token=localStorage.getItem('memoir_token')||null;
 let currentUser=JSON.parse(localStorage.getItem('memoir_user')||'null');
-let currentModal=null,editingId=null,currentRating=0;
+let currentModal=null,editingId=null,currentRating=0,currentMood='';
 let allMovies=[],allBooks=[],allDiary=[],allSeries=[];
 
+/* ── DATA MAPS ── */
 const GENRES=['Action','Adventure','Comedy','Drama','Horror','Sci-Fi','Romance','Thriller','Animation','Musical','War','Documentary','Fantasy','Mystery','Crime','Biography','History','Sport','Western','Superhero','Anime','Thriller & Crime','War & Drama','Action & Adventure','Sci-Fi & Thriller','Romance & Drama','Comedy & Drama','Crime & Drama','Horror & Thriller','Fantasy & Adventure','Action & Comedy','Mystery & Thriller','Other'];
 
+const GENRE_COVER={
+  'Action':['#7a1c1c','#b91c1c'],'Adventure':['#7c3a10','#c45c20'],
+  'Comedy':['#14532d','#16a34a'],'Drama':['#1e3a8a','#2563eb'],
+  'Horror':['#2e1065','#6d28d9'],'Sci-Fi':['#164e63','#0891b2'],
+  'Romance':['#881337','#e11d48'],'Thriller':['#111827','#374151'],
+  'Animation':['#4c1d95','#7c3aed'],'Musical':['#831843','#db2777'],
+  'War':['#422006','#92400e'],'Documentary':['#1c3a1c','#3a7c3a'],
+  'Fantasy':['#581c87','#9333ea'],'Mystery':['#172554','#1d4ed8'],
+  'Crime':['#18181b','#52525b'],'Biography':['#2c1a10','#7a4a28'],
+  'History':['#3c2a1a','#8a5c30'],'Sport':['#064e3b','#059669'],
+  'Western':['#431407','#a16207'],'Superhero':['#1e1b4b','#4338ca'],
+  'Anime':['#4a044e','#a21caf']
+};
+
+const PLATFORM_COVER={
+  'Netflix':['#8b0000','#e50914'],'Amazon Prime':['#00558a','#0093cc'],
+  'Disney+':['#003090','#0063e5'],'Apple TV+':['#1c1c1e','#4a4a4c'],
+  'HBO Max':['#3d0099','#6222ec'],'Hulu':['#0d5f3b','#1ce783'],
+  'Hotstar':['#0f5a9c','#1f80e0'],'SonyLIV':['#8b0810','#e71c24'],
+  'ZEE5':['#5a0a80','#9b27d2'],'JioCinema':['#002850','#0066cc'],
+  'Aha':['#a02010','#d62d20']
+};
+
+const PLATFORM_CLASS={
+  'Netflix':'p-netflix','Amazon Prime':'p-amazon','Disney+':'p-disney',
+  'Apple TV+':'p-apple','HBO Max':'p-hbo','Hulu':'p-hulu',
+  'Hotstar':'p-hotstar','SonyLIV':'p-sonyliv','ZEE5':'p-zee5',
+  'JioCinema':'p-jio','Aha':'p-aha'
+};
+
+const BOOK_COVER={
+  'Reading':['#166534','#16a34a'],'Completed':['#2d4426','#4e7444'],
+  'Paused':['#57534e','#78716c'],'Want to Read':['#1e3a8a','#3b82f6']
+};
+
+const MOOD={
+  happy:    {emoji:'😊',label:'Happy',    color:'#c97a20',bg:'rgba(201,122,32,.12)'},
+  excited:  {emoji:'🤩',label:'Excited',  color:'#ec4899',bg:'rgba(236,72,153,.12)'},
+  calm:     {emoji:'😌',label:'Calm',     color:'#0891b2',bg:'rgba(8,145,178,.12)'},
+  reflective:{emoji:'🤔',label:'Reflective',color:'#7c3aed',bg:'rgba(124,58,237,.12)'},
+  sad:      {emoji:'😔',label:'Sad',      color:'#3b82f6',bg:'rgba(59,130,246,.12)'},
+  anxious:  {emoji:'😰',label:'Anxious',  color:'#ef4444',bg:'rgba(239,68,68,.12)'},
+  frustrated:{emoji:'😤',label:'Frustrated',color:'#f97316',bg:'rgba(249,115,22,.12)'},
+  tired:    {emoji:'😴',label:'Tired',    color:'#6b7280',bg:'rgba(107,114,128,.12)'}
+};
+
+/* ── API ── */
 async function api(method,path,body=null){
   const opts={method,headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})}};
   if(body)opts.body=JSON.stringify(body);
@@ -477,7 +611,7 @@ async function api(method,path,body=null){
   return data;
 }
 
-// ── AUTH ──
+/* ── AUTH ── */
 function switchTab(tab){
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='signup')));
   document.getElementById('login-form').style.display=tab==='login'?'block':'none';
@@ -508,7 +642,7 @@ function loginUser(tok,user){
   document.getElementById('user-name').textContent=user.name;
   document.getElementById('user-email').textContent=user.email;
   document.getElementById('user-avatar').textContent=user.name.charAt(0).toUpperCase();
-  setWelcome();
+  setWelcome();updateThemeBtn();
   document.getElementById('auth-screen').classList.add('hidden');
   document.getElementById('app').classList.add('visible');
   history.replaceState({page:'dashboard'},'','#dashboard');
@@ -529,7 +663,21 @@ function setWelcome(){
   document.getElementById('welcome-msg').innerHTML=`${greet}, <span style="color:var(--sepia)">${currentUser.name.split(' ')[0]}</span>`;
 }
 
-// ── LOAD ──
+/* ── THEME ── */
+function toggleTheme(){
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('memoir_theme',next);
+  updateThemeBtn();
+}
+function updateThemeBtn(){
+  const dark=document.documentElement.getAttribute('data-theme')==='dark';
+  const ti=document.getElementById('theme-icon'),tl=document.getElementById('theme-label');
+  if(ti)ti.textContent=dark?'☀':'◑';
+  if(tl)tl.textContent=dark?'Light Mode':'Dark Mode';
+}
+
+/* ── LOAD ── */
 async function loadAll(){
   try{
     [allMovies,allBooks,allDiary,allSeries]=await Promise.all([
@@ -545,11 +693,8 @@ function updateCounts(){
   document.getElementById('nc-diary').textContent=allDiary.length;
 }
 
-// ── NAV ──
-function showPage(name,el){
-  _renderPage(name,el);
-  if(history.state?.page!==name) history.pushState({page:name},'','#'+name);
-}
+/* ── NAV ── */
+function showPage(name,el){_renderPage(name,el);if(history.state?.page!==name)history.pushState({page:name},'','#'+name);}
 function _renderPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -558,33 +703,39 @@ function _renderPage(name,el){
   if(navEl)navEl.classList.add('active');
   closeSidebar();
 }
-window.addEventListener('popstate',(e)=>{
-  if(!token)return;
-  _renderPage(e.state?.page||'dashboard');
-});
+window.addEventListener('popstate',(e)=>{if(!token)return;_renderPage(e.state?.page||'dashboard');});
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
 
-// ── DASHBOARD ──
+/* ── ANIMATED COUNTER ── */
+function animCount(el,target){
+  if(!el)return;
+  const start=parseInt(el.textContent)||0;
+  if(start===target){el.textContent=target;return;}
+  const dur=700,t0=performance.now();
+  const step=now=>{
+    const p=Math.min((now-t0)/dur,1);
+    el.textContent=Math.round(start+(target-start)*(1-Math.pow(1-p,3)));
+    if(p<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+/* ── DASHBOARD ── */
 function updateDashboard(){
-  document.getElementById('stat-movies').textContent=allMovies.length;
-  document.getElementById('stat-series').textContent=allSeries.length;
-  document.getElementById('stat-books').textContent=allBooks.length;
-  document.getElementById('stat-diary').textContent=allDiary.length;
-  // Movies sub
+  animCount(document.getElementById('stat-movies'),allMovies.length);
+  animCount(document.getElementById('stat-series'),allSeries.length);
+  animCount(document.getElementById('stat-books'),allBooks.length);
+  animCount(document.getElementById('stat-diary'),allDiary.length);
   const rated=allMovies.filter(m=>m.rating>0);
   const avg=rated.length?(rated.reduce((s,m)=>s+m.rating,0)/rated.length).toFixed(1):null;
   document.getElementById('stat-movies-sub').textContent=avg?`Avg rating: ${avg} ★`:(allMovies.length?'No ratings yet':'Start tracking');
-  // Series sub
   const watching=allSeries.filter(s=>s.status==='Watching').length;
   document.getElementById('stat-series-sub').textContent=allSeries.length?`${watching} still watching`:'Start tracking';
-  // Books sub
   const done=allBooks.filter(b=>b.status==='Completed').length;
   document.getElementById('stat-books-sub').textContent=allBooks.length?`${done} completed`:'Start tracking';
-  // Diary sub
   const last=allDiary[0];
   document.getElementById('stat-diary-sub').textContent=last?`Last: ${fmtDate(last.createdAt)}`:'Start writing';
-  // Recent
   const recent=[
     ...allMovies.map(m=>({...m,_type:'movie'})),
     ...allSeries.map(s=>({...s,_type:'webseries'})),
@@ -592,109 +743,245 @@ function updateDashboard(){
     ...allDiary.map(d=>({...d,_type:'diary'}))
   ].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,6);
   const grid=document.getElementById('recent-grid');
-  grid.innerHTML=recent.length?recent.map(i=>
-    i._type==='movie'?movieCard(i):
-    i._type==='webseries'?seriesCard(i):
-    i._type==='book'?bookCard(i):diaryCardCompact(i)
+  grid.innerHTML=recent.length?recent.map((i,idx)=>
+    i._type==='movie'?movieCard(i,idx):
+    i._type==='webseries'?seriesCard(i,idx):
+    i._type==='book'?bookCard(i,idx):diaryCardCompact(i,idx)
   ).join(''):`<div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-title">Your vault is empty</div><p class="empty-sub">Start by adding a movie, series, book, or diary entry.</p></div>`;
 }
 
-// ── MOVIES ──
+/* ── SORT HELPER ── */
+function applySort(items,sortId){
+  const sort=document.getElementById(sortId)?.value||'date-desc';
+  return [...items].sort((a,b)=>{
+    if(sort==='date-asc')  return new Date(a.createdAt)-new Date(b.createdAt);
+    if(sort==='title-asc') return a.title.localeCompare(b.title);
+    if(sort==='title-desc')return b.title.localeCompare(a.title);
+    if(sort==='rating-desc')return (b.rating||0)-(a.rating||0);
+    return new Date(b.createdAt)-new Date(a.createdAt);
+  });
+}
+
+/* ── FAV FILTER ── */
+function toggleFavFilter(section){
+  const btn=document.getElementById(`fav-${section}`);
+  btn.classList.toggle('active');
+  if(section==='movies')renderMovies();
+  else if(section==='series')renderSeries();
+  else if(section==='books')renderBooks();
+  else renderDiary();
+}
+function favActive(section){return document.getElementById(`fav-${section}`)?.classList.contains('active');}
+
+/* ── TOGGLE FAVORITE ── */
+async function toggleFavorite(type,id){
+  const arr=type==='movie'?allMovies:type==='webseries'?allSeries:type==='book'?allBooks:allDiary;
+  const item=arr.find(i=>i._id===id);
+  if(!item)return;
+  const newFav=!item.favorited;
+  const path=type==='movie'?`/movies/${id}`:type==='webseries'?`/webseries/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
+  try{
+    const updated=await api('PUT',path,{favorited:newFav});
+    if(type==='movie')allMovies=allMovies.map(m=>m._id===id?updated:m);
+    else if(type==='webseries')allSeries=allSeries.map(s=>s._id===id?updated:s);
+    else if(type==='book')allBooks=allBooks.map(b=>b._id===id?updated:b);
+    else allDiary=allDiary.map(d=>d._id===id?updated:d);
+    if(type==='movie')renderMovies();
+    else if(type==='webseries')renderSeries();
+    else if(type==='book')renderBooks();
+    else renderDiary();
+    updateDashboard();
+    showToast(newFav?'Added to favorites ♥':'Removed from favorites','');
+  }catch(err){showToast('Failed to update','error');}
+}
+
+/* ── MOVIES ── */
 function renderMovies(){
   const q=(document.getElementById('movie-search')?.value||'').toLowerCase();
   const gf=document.getElementById('movie-genre-filter')?.value||'';
   const rf=parseInt(document.getElementById('movie-rating-filter')?.value||'0');
-  const items=allMovies.filter(m=>(!q||m.title.toLowerCase().includes(q)||(m.genre||'').toLowerCase().includes(q))&&(!gf||m.genre===gf)&&(!rf||(m.rating||0)>=rf));
-  document.getElementById('movies-grid').innerHTML=items.length?items.map(movieCard).join('')
+  let items=allMovies.filter(m=>
+    (!q||m.title.toLowerCase().includes(q)||(m.genre||'').toLowerCase().includes(q))&&
+    (!gf||m.genre===gf)&&(!rf||(m.rating||0)>=rf)&&
+    (!favActive('movies')||m.favorited)
+  );
+  items=applySort(items,'movie-sort');
+  document.getElementById('movies-grid').innerHTML=items.length?items.map((m,i)=>movieCard(m,i)).join('')
     :`<div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-title">No movies yet</div><p class="empty-sub">Add your first watched movie.</p></div>`;
 }
-function movieCard(m){
-  const s=[1,2,3,4,5].map(i=>`<span class="star ${i<=(m.rating||0)?'filled':'empty'}">★</span>`).join('');
-  return `<div class="entry-card movie"><div class="card-accent"></div><div class="card-body">
-    <div class="card-header"><div class="card-title">${esc(m.title)}</div>
-    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('movie','${m._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('movie','${m._id}')">✕</button></div></div>
-    <div class="card-tags">${m.genre?`<span class="tag genre">${esc(m.genre)}</span>`:''} ${m.year?`<span class="tag year">${m.year}</span>`:''}</div>
-    ${m.rating?`<div class="stars">${s}</div>`:''}
-    ${m.notes?`<div class="card-note">${esc(m.notes)}</div>`:''}</div>
-    <div class="card-footer"><span class="card-date">${m.watchedDate||fmtDate(m.createdAt)}</span></div></div>`;
+function movieCard(m,idx=0){
+  const [c1,c2]=GENRE_COVER[m.genre]||['#7a2b0a','#c44a18'];
+  const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=(m.rating||0)?'filled':'empty'}">★</span>`).join('');
+  const isFav=!!m.favorited;
+  return `<div class="entry-card movie" style="animation-delay:${idx*55}ms">
+    <div class="card-cover" style="background:linear-gradient(135deg,${c1} 0%,${c2} 100%)">
+      <div class="cover-row">
+        <span class="cover-emoji">🎬</span>
+        <div class="cover-actions">
+          <button class="btn-cov ${isFav?'fav-on':''}" onclick="toggleFavorite('movie','${m._id}')" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'♥':'♡'}</button>
+          <button class="btn-cov" onclick="editEntry('movie','${m._id}')" title="Edit">✎</button>
+          <button class="btn-cov" onclick="deleteEntry('movie','${m._id}')" title="Delete">✕</button>
+        </div>
+      </div>
+      <div class="cover-title">${esc(m.title)}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tags">${m.genre?`<span class="tag genre">${esc(m.genre)}</span>`:''} ${m.year?`<span class="tag year">${m.year}</span>`:''}</div>
+      ${m.rating?`<div class="stars">${stars}</div>`:''}
+      ${m.notes?`<div class="card-note">${esc(m.notes)}</div>`:''}
+    </div>
+    <div class="card-footer"><span class="card-date">${m.watchedDate||fmtDate(m.createdAt)}</span></div>
+  </div>`;
 }
 
-// ── WEB SERIES ──
+/* ── WEB SERIES ── */
 function renderSeries(){
   const q=(document.getElementById('series-search')?.value||'').toLowerCase();
   const pf=document.getElementById('series-platform-filter')?.value||'';
   const sf=document.getElementById('series-status-filter')?.value||'';
-  const items=allSeries.filter(s=>(!q||s.title.toLowerCase().includes(q))&&(!pf||s.platform===pf)&&(!sf||s.status===sf));
-  document.getElementById('series-grid').innerHTML=items.length?items.map(seriesCard).join('')
+  let items=allSeries.filter(s=>
+    (!q||s.title.toLowerCase().includes(q))&&(!pf||s.platform===pf)&&
+    (!sf||s.status===sf)&&(!favActive('series')||s.favorited)
+  );
+  items=applySort(items,'series-sort');
+  document.getElementById('series-grid').innerHTML=items.length?items.map((s,i)=>seriesCard(s,i)).join('')
     :`<div class="empty-state"><div class="empty-icon">📺</div><div class="empty-title">No series yet</div><p class="empty-sub">Add your first show or series.</p></div>`;
 }
-function seriesCard(s){
+function seriesCard(s,idx=0){
+  const [c1,c2]=PLATFORM_COVER[s.platform]||['#3d3498','#7c6fdb'];
   const sc=(s.status||'').toLowerCase().replace(/\s+/g,'-');
   const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=(s.rating||0)?'filled':'empty'}">★</span>`).join('');
-  return `<div class="entry-card series-entry"><div class="card-accent"></div><div class="card-body">
-    <div class="card-header"><div class="card-title">${esc(s.title)}</div>
-    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('webseries','${s._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('webseries','${s._id}')">✕</button></div></div>
-    <div class="card-tags">
-      ${s.status?`<span class="tag status-${sc}">${s.status}</span>`:''}
-      ${s.platform?`<span class="tag platform">${esc(s.platform)}</span>`:''}
-      ${s.seasons?`<span class="tag year">${s.seasons} season${s.seasons>1?'s':''}</span>`:''}
+  const platClass=PLATFORM_CLASS[s.platform]||'';
+  const isFav=!!s.favorited;
+  return `<div class="entry-card series-entry" style="animation-delay:${idx*55}ms">
+    <div class="card-cover" style="background:linear-gradient(135deg,${c1} 0%,${c2} 100%)">
+      <div class="cover-row">
+        <span class="cover-emoji">📺</span>
+        <div class="cover-actions">
+          <button class="btn-cov ${isFav?'fav-on':''}" onclick="toggleFavorite('webseries','${s._id}')">${isFav?'♥':'♡'}</button>
+          <button class="btn-cov" onclick="editEntry('webseries','${s._id}')">✎</button>
+          <button class="btn-cov" onclick="deleteEntry('webseries','${s._id}')">✕</button>
+        </div>
+      </div>
+      <div class="cover-title">${esc(s.title)}</div>
     </div>
-    ${s.rating?`<div class="stars">${stars}</div>`:''}
-    ${s.notes?`<div class="card-note">${esc(s.notes)}</div>`:''}</div>
-    <div class="card-footer"><span class="card-date">${fmtDate(s.createdAt)}</span></div></div>`;
+    <div class="card-body">
+      <div class="card-tags">
+        ${s.status?`<span class="tag status-${sc}">${s.status}</span>`:''}
+        ${s.platform?`<span class="tag ${platClass}">${esc(s.platform)}</span>`:''}
+        ${s.seasons?`<span class="tag seasons">${s.seasons} season${s.seasons>1?'s':''}</span>`:''}
+      </div>
+      ${s.rating?`<div class="stars">${stars}</div>`:''}
+      ${s.notes?`<div class="card-note">${esc(s.notes)}</div>`:''}
+    </div>
+    <div class="card-footer"><span class="card-date">${fmtDate(s.createdAt)}</span></div>
+  </div>`;
 }
 
-// ── BOOKS ──
+/* ── BOOKS ── */
 function renderBooks(){
   const q=(document.getElementById('book-search')?.value||'').toLowerCase();
   const sf=document.getElementById('book-status-filter')?.value||'';
-  const items=allBooks.filter(b=>(!q||b.title.toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q))&&(!sf||b.status===sf));
-  document.getElementById('books-grid').innerHTML=items.length?items.map(bookCard).join('')
+  let items=allBooks.filter(b=>
+    (!q||b.title.toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q))&&
+    (!sf||b.status===sf)&&(!favActive('books')||b.favorited)
+  );
+  items=applySort(items,'book-sort');
+  document.getElementById('books-grid').innerHTML=items.length?items.map((b,i)=>bookCard(b,i)).join('')
     :`<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">No books yet</div><p class="empty-sub">Log your first book.</p></div>`;
 }
-function bookCard(b){
+function bookCard(b,idx=0){
+  const [c1,c2]=BOOK_COVER[b.status]||['#2d4426','#4e7444'];
   const sc=(b.status||'').toLowerCase().replace(/\s+/g,'-');
-  const s=[1,2,3,4,5].map(i=>`<span class="star ${i<=(b.rating||0)?'filled':'empty'}">★</span>`).join('');
-  return `<div class="entry-card book"><div class="card-accent"></div><div class="card-body">
-    <div class="card-header"><div class="card-title">${esc(b.title)}</div>
-    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('book','${b._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('book','${b._id}')">✕</button></div></div>
-    <div class="card-tags">${b.status?`<span class="tag status-${sc}">${b.status}</span>`:''}</div>
-    ${b.rating?`<div class="stars">${s}</div>`:''}
-    ${b.notes?`<div class="card-note">${esc(b.notes)}</div>`:''}</div>
-    <div class="card-footer">${b.author?`<span class="card-author">by ${esc(b.author)}</span>`:'<span></span>'}<span class="card-date">${fmtDate(b.createdAt)}</span></div></div>`;
+  const stars=[1,2,3,4,5].map(i=>`<span class="star ${i<=(b.rating||0)?'filled':'empty'}">★</span>`).join('');
+  const isFav=!!b.favorited;
+  return `<div class="entry-card book" style="animation-delay:${idx*55}ms">
+    <div class="card-cover" style="background:linear-gradient(135deg,${c1} 0%,${c2} 100%)">
+      <div class="cover-row">
+        <span class="cover-emoji">📚</span>
+        <div class="cover-actions">
+          <button class="btn-cov ${isFav?'fav-on':''}" onclick="toggleFavorite('book','${b._id}')">${isFav?'♥':'♡'}</button>
+          <button class="btn-cov" onclick="editEntry('book','${b._id}')">✎</button>
+          <button class="btn-cov" onclick="deleteEntry('book','${b._id}')">✕</button>
+        </div>
+      </div>
+      <div class="cover-title">${esc(b.title)}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tags">${b.status?`<span class="tag status-${sc}">${b.status}</span>`:''}</div>
+      ${b.rating?`<div class="stars">${stars}</div>`:''}
+      ${b.notes?`<div class="card-note">${esc(b.notes)}</div>`:''}
+    </div>
+    <div class="card-footer">${b.author?`<span class="card-author">by ${esc(b.author)}</span>`:'<span></span>'}<span class="card-date">${fmtDate(b.createdAt)}</span></div>
+  </div>`;
 }
 
-// ── DIARY ──
+/* ── DIARY ── */
 function renderDiary(){
   const q=(document.getElementById('diary-search')?.value||'').toLowerCase();
-  const items=allDiary.filter(d=>!q||d.content.toLowerCase().includes(q));
+  const mf=document.getElementById('diary-mood-filter')?.value||'';
+  const sortVal=document.getElementById('diary-sort')?.value||'date-desc';
+  let items=allDiary.filter(d=>
+    (!q||d.content.toLowerCase().includes(q))&&
+    (!mf||d.mood===mf)&&
+    (!favActive('diary')||d.favorited)
+  );
+  items=[...items].sort((a,b)=>sortVal==='date-asc'?new Date(a.createdAt)-new Date(b.createdAt):new Date(b.createdAt)-new Date(a.createdAt));
   document.getElementById('diary-list').innerHTML=items.length?items.map(diaryCardFull).join('')
     :`<div class="empty-state"><div class="empty-icon">✍️</div><div class="empty-title">No entries yet</div><p class="empty-sub">Pour your thoughts here.</p></div>`;
 }
 function diaryCardFull(d){
-  return `<div class="diary-card"><div class="diary-card-inner"><div class="diary-sidebar-strip"></div><div class="diary-card-content">
-    <div class="diary-actions"><button class="btn-icon edit" onclick="editEntry('diary','${d._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('diary','${d._id}')">✕</button></div>
-    <div class="diary-date-badge">📅 ${fmtDate(d.createdAt)}</div>
-    <div class="diary-content">${esc(d.content)}</div>
-    </div></div></div>`;
+  const moodCfg=d.mood&&MOOD[d.mood];
+  const isFav=!!d.favorited;
+  return `<div class="diary-card">
+    <div class="diary-card-inner">
+      <div class="diary-sidebar-strip"></div>
+      <div class="diary-card-content">
+        <div class="diary-actions">
+          <button class="btn-icon ${isFav?'fav-on':''}" onclick="toggleFavorite('diary','${d._id}')" title="${isFav?'Remove from favorites':'Add to favorites'}">${isFav?'♥':'♡'}</button>
+          <button class="btn-icon edit" onclick="editEntry('diary','${d._id}')">✎</button>
+          <button class="btn-icon" onclick="deleteEntry('diary','${d._id}')">✕</button>
+        </div>
+        <div class="diary-meta">
+          <span class="diary-date-badge">📅 ${fmtDate(d.createdAt)}</span>
+          ${moodCfg?`<span class="mood-badge" style="color:${moodCfg.color};background:${moodCfg.bg};border-color:${moodCfg.color}40">${moodCfg.emoji} ${moodCfg.label}</span>`:''}
+        </div>
+        <div class="diary-content">${esc(d.content)}</div>
+      </div>
+    </div>
+  </div>`;
 }
-function diaryCardCompact(d){
-  const p=d.content.length>130?d.content.slice(0,130)+'…':d.content;
-  return `<div class="entry-card diary-entry"><div class="card-accent"></div><div class="card-body">
-    <div class="card-header"><div class="card-title" style="font-size:0.7rem;font-family:'Inter',sans-serif;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:0.1em">Diary</div>
-    <div class="card-actions"><button class="btn-icon edit" onclick="editEntry('diary','${d._id}')">✎</button><button class="btn-icon" onclick="deleteEntry('diary','${d._id}')">✕</button></div></div>
-    <div class="card-note" style="font-family:'Cormorant Garamond',serif;font-size:0.97rem;font-style:italic">${esc(p)}</div></div>
-    <div class="card-footer"><span class="card-date">${fmtDate(d.createdAt)}</span></div></div>`;
+function diaryCardCompact(d,idx=0){
+  const moodCfg=d.mood&&MOOD[d.mood];
+  const p=d.content.length>120?d.content.slice(0,120)+'…':d.content;
+  return `<div class="entry-card diary-entry" style="animation-delay:${idx*55}ms">
+    <div class="card-cover">
+      <div class="cover-row">
+        <span class="cover-emoji">${moodCfg?moodCfg.emoji:'✍️'}</span>
+        <div class="cover-actions">
+          <button class="btn-cov" onclick="editEntry('diary','${d._id}')">✎</button>
+          <button class="btn-cov" onclick="deleteEntry('diary','${d._id}')">✕</button>
+        </div>
+      </div>
+      <div class="cover-title" style="font-size:.82rem;font-family:'Inter',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;opacity:.8">Diary</div>
+    </div>
+    <div class="card-body">
+      <div class="card-note" style="font-family:'Cormorant Garamond',serif;font-size:.97rem;font-style:italic">${esc(p)}</div>
+    </div>
+    <div class="card-footer"><span class="card-date">${fmtDate(d.createdAt)}</span></div>
+  </div>`;
 }
 
-// ── MODAL ──
+/* ── MODAL ── */
 function openModal(type,data=null){
-  currentModal=type;editingId=data?data._id:null;currentRating=data?(data.rating||0):0;
+  currentModal=type;editingId=data?data._id:null;
+  currentRating=data?(data.rating||0):0;
+  currentMood=data?(data.mood||''):'';
   const cfg={
-    movie:     {title:data?'Edit Movie':'Add Movie',         sub:data?'Update the details':'Log a movie you watched'},
-    webseries: {title:data?'Edit Series':'Add Web Series',   sub:data?'Update the details':'Log a show or series'},
-    book:      {title:data?'Edit Book':'Add Book',           sub:data?'Update the details':'Log a book you read'},
-    diary:     {title:data?'Edit Entry':'New Diary Entry',   sub:data?'Update your entry':'Write freely — this is private'}
+    movie:    {title:data?'Edit Movie':'Add Movie',         sub:data?'Update the details':'Log a movie you watched'},
+    webseries:{title:data?'Edit Series':'Add Web Series',   sub:data?'Update the details':'Log a show or series'},
+    book:     {title:data?'Edit Book':'Add Book',           sub:data?'Update the details':'Log a book you read'},
+    diary:    {title:data?'Edit Entry':'New Diary Entry',   sub:data?'Update your entry':'Write freely — this is private'}
   };
   document.getElementById('modal-title').textContent=cfg[type].title;
   document.getElementById('modal-subtitle').textContent=cfg[type].sub;
@@ -703,12 +990,12 @@ function openModal(type,data=null){
     type==='webseries'?seriesForm(data):
     type==='book'?bookForm(data):diaryForm(data);
   if(type!=='diary')renderStars(currentRating);
+  if(type==='diary')renderMoodPicker(currentMood);
   document.getElementById('btn-save').textContent='Save Entry';
   document.getElementById('btn-save').disabled=false;
   document.getElementById('modal-overlay').classList.add('open');
   setTimeout(()=>document.querySelector('#modal-body input,#modal-body textarea')?.focus(),100);
 }
-
 function movieForm(d){
   return `<div class="form-row">
     <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Inception"/></div>
@@ -720,9 +1007,8 @@ function movieForm(d){
     <div class="form-field"><label>Watched Date</label><input id="f-watched" type="date" value="${d?.watchedDate||''}"/></div>
   </div>
   <div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
-  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="What did you think of this movie?">${esc(d?.notes||'')}</textarea></div>`;
+  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="What did you think?">${esc(d?.notes||'')}</textarea></div>`;
 }
-
 function seriesForm(d){
   const platforms=['Netflix','Amazon Prime','Disney+','Apple TV+','HBO Max','Hulu','Hotstar','SonyLIV','ZEE5','JioCinema','Aha','Other'];
   return `<div class="form-row">
@@ -737,9 +1023,8 @@ function seriesForm(d){
     </select></div>
   </div>
   <div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
-  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts on this series…">${esc(d?.notes||'')}</textarea></div>`;
+  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts…">${esc(d?.notes||'')}</textarea></div>`;
 }
-
 function bookForm(d){
   return `<div class="form-row">
     <div class="form-field"><label>Title *</label><input id="f-title" value="${esc(d?.title||'')}" placeholder="e.g. Atomic Habits"/></div>
@@ -751,19 +1036,33 @@ function bookForm(d){
     <div class="form-field"><label>Pages</label><input id="f-pages" type="number" value="${d?.pages||''}" placeholder="e.g. 320"/></div>
   </div>
   <div class="form-field"><label>Your Rating</label><div class="star-rating" id="star-rating"></div></div>
-  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Your thoughts, key takeaways…">${esc(d?.notes||'')}</textarea></div>`;
+  <div class="form-field"><label>Notes / Review</label><textarea id="f-notes" placeholder="Thoughts, key takeaways…">${esc(d?.notes||'')}</textarea></div>`;
 }
-
 function diaryForm(d){
-  return `<div class="form-field"><label>Your Thoughts *</label><textarea id="f-content" style="min-height:200px" placeholder="Write freely… this is just for you.">${esc(d?.content||'')}</textarea></div>`;
+  return `<div class="form-field"><label>How are you feeling?</label><div class="mood-grid" id="mood-grid"></div></div>
+  <div class="form-field"><label>Your Thoughts *</label><textarea id="f-content" style="min-height:200px" placeholder="Write freely… this is just for you.">${esc(d?.content||'')}</textarea></div>`;
 }
-
-function renderStars(sel){const c=document.getElementById('star-rating');if(!c)return;c.innerHTML=[1,2,3,4,5].map(i=>`<button type="button" class="star-btn ${i<=sel?'active':''}" onclick="setRating(${i})">★</button>`).join('');}
+function renderStars(sel){
+  const c=document.getElementById('star-rating');
+  if(!c)return;
+  c.innerHTML=[1,2,3,4,5].map(i=>`<button type="button" class="star-btn ${i<=sel?'active':''}" onclick="setRating(${i})">★</button>`).join('');
+}
 function setRating(n){currentRating=n;renderStars(n);}
-function closeModal(){document.getElementById('modal-overlay').classList.remove('open');editingId=null;currentModal=null;currentRating=0;}
+function renderMoodPicker(sel){
+  const g=document.getElementById('mood-grid');
+  if(!g)return;
+  g.innerHTML=Object.entries(MOOD).map(([key,m])=>
+    `<button type="button" class="mood-btn ${sel===key?'active':''}" onclick="selectMood('${key}')">${m.emoji} ${m.label}</button>`
+  ).join('');
+}
+function selectMood(key){
+  currentMood=currentMood===key?'':key;
+  renderMoodPicker(currentMood);
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');editingId=null;currentModal=null;currentRating=0;currentMood='';}
 function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
 
-// ── SAVE ──
+/* ── SAVE ── */
 async function saveEntry(){
   const btn=document.getElementById('btn-save');
   btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
@@ -774,7 +1073,6 @@ async function saveEntry(){
     else await saveDiary();
   }catch(err){showToast(err.message,'error');btn.textContent='Save Entry';btn.disabled=false;}
 }
-
 async function saveMovie(){
   const title=document.getElementById('f-title').value.trim();
   if(!title){showToast('Title is required.','error');resetBtn();return;}
@@ -783,7 +1081,6 @@ async function saveMovie(){
   else{const c=await api('POST','/movies',body);allMovies.unshift(c);showToast('Movie added! 🎬','success');}
   closeModal();renderMovies();updateDashboard();updateCounts();
 }
-
 async function saveSeries(){
   const title=document.getElementById('f-title').value.trim();
   if(!title){showToast('Title is required.','error');resetBtn();return;}
@@ -792,7 +1089,6 @@ async function saveSeries(){
   else{const c=await api('POST','/webseries',body);allSeries.unshift(c);showToast('Series added! 📺','success');}
   closeModal();renderSeries();updateDashboard();updateCounts();
 }
-
 async function saveBook(){
   const title=document.getElementById('f-title').value.trim();
   if(!title){showToast('Title is required.','error');resetBtn();return;}
@@ -801,15 +1097,14 @@ async function saveBook(){
   else{const c=await api('POST','/books',body);allBooks.unshift(c);showToast('Book added! 📚','success');}
   closeModal();renderBooks();updateDashboard();updateCounts();
 }
-
 async function saveDiary(){
   const content=document.getElementById('f-content').value.trim();
   if(!content){showToast('Write something first.','error');resetBtn();return;}
-  if(editingId){const u=await api('PUT',`/diary/${editingId}`,{content});allDiary=allDiary.map(d=>d._id===editingId?u:d);showToast('Entry updated!','success');}
-  else{const c=await api('POST','/diary',{content});allDiary.unshift(c);showToast('Entry saved! ✍️','success');}
+  const body={content,mood:currentMood};
+  if(editingId){const u=await api('PUT',`/diary/${editingId}`,body);allDiary=allDiary.map(d=>d._id===editingId?u:d);showToast('Entry updated!','success');}
+  else{const c=await api('POST','/diary',body);allDiary.unshift(c);showToast('Entry saved! ✍️','success');}
   closeModal();renderDiary();updateDashboard();updateCounts();
 }
-
 function resetBtn(){const b=document.getElementById('btn-save');b.textContent='Save Entry';b.disabled=false;}
 
 function editEntry(type,id){
@@ -819,7 +1114,6 @@ function editEntry(type,id){
            allDiary.find(d=>d._id===id);
   if(d)openModal(type,d);
 }
-
 async function deleteEntry(type,id){
   if(!confirm('Delete this entry? This cannot be undone.'))return;
   const path=type==='movie'?`/movies/${id}`:type==='webseries'?`/webseries/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
@@ -832,7 +1126,7 @@ async function deleteEntry(type,id){
   showToast('Entry deleted.','');
 }
 
-// ── HELPERS ──
+/* ── HELPERS ── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmtDate(iso){if(!iso)return'';return new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}
 function showToast(msg,type){
@@ -840,9 +1134,10 @@ function showToast(msg,type){
   const icons={success:'✓',error:'✕','':'·'};
   t.innerHTML=`<span style="font-size:1rem;flex-shrink:0">${icons[type]||'·'}</span>${msg}`;
   document.getElementById('toast-container').appendChild(t);
-  setTimeout(()=>{t.style.transition='opacity 0.3s';t.style.opacity='0';setTimeout(()=>t.remove(),300);},3000);
+  setTimeout(()=>{t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(()=>t.remove(),300);},3000);
 }
 
+updateThemeBtn();
 if(token&&currentUser)loginUser(token,currentUser);
 </script>
 </body>
