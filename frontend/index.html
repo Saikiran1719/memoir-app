@@ -1405,8 +1405,8 @@ async function submitDeletePassword(){
     document.getElementById('del-error').textContent='Incorrect password.';
     btn.disabled=false;btn.textContent='Delete';return;
   }
-  closeDeleteModal();
   const type=_delType,id=_delId;
+  closeDeleteModal();
   const path=type==='movie'?`/movies/${id}`:type==='webseries'?`/webseries/${id}`:type==='book'?`/books/${id}`:`/diary/${id}`;
   await api('DELETE',path);
   if(type==='movie'){allMovies=allMovies.filter(m=>m._id!==id);renderMovies();}
